@@ -14,4 +14,5 @@ public interface AccountService {
     Account getbyIban(String iban);
     int deposit(String iban, int amount) throws Exception;
     Account withdraw(String iban,int amount) throws Exception;
+    void closeAccount(String iban);
 }

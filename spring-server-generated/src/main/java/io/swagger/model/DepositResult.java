@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
+
 import javax.validation.constraints.*;
 
 /**
@@ -19,9 +19,6 @@ import javax.validation.constraints.*;
 public class DepositResult   {
   @JsonProperty("success")
   private String success = null;
-
-  @JsonProperty("CurrentBalance")
-  private BigDecimal currentBalance = null;
 
   @JsonProperty("time")
   private LocalDateTime time = null;
@@ -47,24 +44,7 @@ public class DepositResult   {
   }
 
   public DepositResult currentBalance(BigDecimal currentBalance) {
-    this.currentBalance = currentBalance;
     return this;
-  }
-
-  /**
-   * Get currentBalance
-   * @return currentBalance
-   **/
-  @Schema(example = "120", required = true, description = "")
-      @NotNull
-
-    @Valid
-    public BigDecimal getCurrentBalance() {
-    return currentBalance;
-  }
-
-  public void setCurrentBalance(BigDecimal currentBalance) {
-    this.currentBalance = currentBalance;
   }
 
   public DepositResult time(LocalDateTime time) {
@@ -97,13 +77,12 @@ public class DepositResult   {
     }
     DepositResult depositResult = (DepositResult) o;
     return Objects.equals(this.success, depositResult.success) &&
-        Objects.equals(this.currentBalance, depositResult.currentBalance) &&
         Objects.equals(this.time, depositResult.time);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(success, currentBalance, time);
+    return Objects.hash(success,  time);
   }
 
   @Override
@@ -112,7 +91,6 @@ public class DepositResult   {
     sb.append("class DepositResult {\n");
     
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
-    sb.append("    currentBalance: ").append(toIndentedString(currentBalance)).append("\n");
     sb.append("    time: ").append(toIndentedString(time)).append("\n");
     sb.append("}");
     return sb.toString();

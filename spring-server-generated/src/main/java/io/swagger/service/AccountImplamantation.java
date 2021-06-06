@@ -75,7 +75,7 @@ public class AccountImplamantation implements AccountService{
         Account account = getbyIban(iban);
         BigDecimal newamount = account.getBalance().add(BigDecimal.valueOf(amount));
         if (account != null) {
-            return accountRepository.updateBalance(newamount, account.getUserid());
+            return accountRepository.updateBalance(newamount, account.getIban());
         }
         else {
             throw new Exception("incorrect iban");
@@ -90,7 +90,7 @@ public class AccountImplamantation implements AccountService{
             throw new Exception("Balance too low");
         }
         else {
-            accountRepository.updateBalance(withdrawAmount,account.getUserid());
+            accountRepository.updateBalance(withdrawAmount,account.getIban());
             return getbyIban(iban);
         }
     }
@@ -103,6 +103,17 @@ public class AccountImplamantation implements AccountService{
         }else{
             throw new Exception("Accounts can not be retrieved");
         }
+    }
+    @Override
+    public void closeAccount(String iban){
+        Account account = getbyIban(iban);
+        if(account!=null){
+            accountRepository.delete(account);
+        }
+        else{
+            throw new EntityNotFoundException("Account does not exit");
+        }
+
     }
 
 

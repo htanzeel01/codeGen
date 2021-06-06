@@ -82,4 +82,18 @@ public class UserToCreateImpl implements UserToCreateService {
         }
 
     }
+    @Override
+    public void updateUser(Integer id,UserToCreate user){
+
+        UserToCreate u = userToCreateRepository.findUserToCreateByUserId(id);
+        u.setEmail(user.getEmail());
+        u.setFirstName(user.getFirstName());
+        u.setUsername(user.getUsername());
+        u.setLastName(user.getLastName());
+        u.setUserType(user.getUserType());
+        u.setPassword(user.getPassword());
+        userToCreateRepository.save(u);
+        //userToCreateRepository.updateUser(u.getUserType(),u.getUsername(),u.getFirstName(),u.getLastName(),u.getEmail(),u.getPassword(),id);*/
+
+    }
 }

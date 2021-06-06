@@ -16,4 +16,5 @@ public interface UserToCreateService {
     List<UserToCreate> getALLUsers();
     UserToCreate getAllUsersByUserName(String username);
     UserToCreate getUserByUserId(Integer userId) throws Exception;
+    void updateUser(Integer id,UserToCreate user);
 }

@@ -79,16 +79,15 @@ public interface UsersApi {
 
 
     @Operation(summary = "Update User", description = "Update the User based on the userId.", security = {
-        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Object containing result of the operation", content = @Content(schema = @Schema(implementation = Update.class))),
-        
-        @ApiResponse(responseCode = "400", description = "Could not update the User") })
-    @RequestMapping(value = "/users/{userId}/updateUser",
-        produces = { "application/json" }, 
-        consumes = { "application/json" }, 
-        method = RequestMethod.PUT)
-    ResponseEntity<Update> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody User body);
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Invalid"),
+
+            @ApiResponse(responseCode = "404", description = "Not Found") })
+    @RequestMapping(value = "/users/{userId}",
+            consumes = { "application/json" },
+            method = RequestMethod.PUT)
+    ResponseEntity<Void> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId, @Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody UserToCreate body);
 
 }
 

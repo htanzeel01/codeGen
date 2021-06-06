@@ -20,8 +20,8 @@ public interface AccountRepository extends JpaRepository<Account,String> {
     Account getAccountByIban(String iban);
     @Transactional
     @Modifying
-    @Query("update Account a set balance = ?1 where USER_ID = ?2")
-    int updateBalance(BigDecimal balance, int id);
+    @Query("update Account a set balance = ?1 where IBAN = ?2")
+    int updateBalance(BigDecimal balance, String iban);
 
     List<Account> getAllByName(String name);
 

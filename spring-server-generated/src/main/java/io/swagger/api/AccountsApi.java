@@ -53,17 +53,7 @@ public interface AccountsApi {
     ResponseEntity<DepositResult> accountDeposit(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Deposit body);
 
 
-    @Operation(summary = "Close account", description = "this will delete the account using the account id", security = {
-        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "204", description = "Account has been closed"),
-        
-        @ApiResponse(responseCode = "400", description = "Parameters are incorrect"),
-        
-        @ApiResponse(responseCode = "404", description = "Id was not found") })
-    @RequestMapping(value = "/accounts/close/{IBAN}",
-        method = RequestMethod.DELETE)
-    ResponseEntity<Void> accountID(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") Integer IBAN);
+
 
 
     @Operation(summary = "this will allow a user to withdraw money from his account", description = "", security = {
@@ -109,6 +99,22 @@ public interface AccountsApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<Account> getAccounts(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN);
+
+
+    @Operation(summary = "Close account", description = "this will delete the account using the account id", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Account has been closed"),
+
+            @ApiResponse(responseCode = "400", description = "Parameters are incorrect"),
+
+            @ApiResponse(responseCode = "404", description = "Id was not found"),
+
+            @ApiResponse(responseCode = "405", description = "method not allowed") })
+    @RequestMapping(value = "/accounts/{IBAN}",
+            method = RequestMethod.DELETE)
+    ResponseEntity<Void> closeAccount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN);
+
 
 }
 

@@ -90,18 +90,14 @@ public class UsersApiController implements UsersApi {
 
     }
 
-    public ResponseEntity<Update> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody User body) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Update>(objectMapper.readValue("{\n  \"Message\" : \"User has been updated\",\n  \"Success\" : true\n}", Update.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Update>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+    public ResponseEntity<Void> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId,@Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody UserToCreate body) {
+        try {
+            userToCreateService.updateUser(userId,body);
+            return new ResponseEntity<Void>(HttpStatus.OK);
 
-        return new ResponseEntity<Update>(HttpStatus.NOT_IMPLEMENTED);
+        }catch (Exception e){
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

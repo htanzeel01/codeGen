@@ -1,12 +1,12 @@
 package io.swagger.model;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
+
 import javax.validation.constraints.*;
 
 /**
@@ -20,11 +20,8 @@ public class Withdrawresult   {
   @JsonProperty("success")
   private String success = null;
 
-  @JsonProperty("remainingbalance")
-  private BigDecimal remainingbalance = null;
-
   @JsonProperty("time")
-  private String time = null;
+  private LocalDateTime time = null;
 
   @JsonProperty("dailyLimit")
   private Integer dailyLimit = null;
@@ -50,27 +47,10 @@ public class Withdrawresult   {
   }
 
   public Withdrawresult remainingbalance(BigDecimal remainingbalance) {
-    this.remainingbalance = remainingbalance;
     return this;
   }
 
-  /**
-   * Get remainingbalance
-   * @return remainingbalance
-   **/
-  @Schema(example = "80", required = true, description = "")
-      @NotNull
-
-    @Valid
-    public BigDecimal getRemainingbalance() {
-    return remainingbalance;
-  }
-
-  public void setRemainingbalance(BigDecimal remainingbalance) {
-    this.remainingbalance = remainingbalance;
-  }
-
-  public Withdrawresult time(String time) {
+  public Withdrawresult time(LocalDateTime time) {
     this.time = time;
     return this;
   }
@@ -80,13 +60,12 @@ public class Withdrawresult   {
    * @return time
    **/
   @Schema(example = "12:00 PM", required = true, description = "")
-      @NotNull
 
-    public String getTime() {
+  public LocalDateTime getTime() {
     return time;
   }
 
-  public void setTime(String time) {
+  public void setTime(LocalDateTime time) {
     this.time = time;
   }
 
@@ -121,14 +100,13 @@ public class Withdrawresult   {
     }
     Withdrawresult withdrawresult = (Withdrawresult) o;
     return Objects.equals(this.success, withdrawresult.success) &&
-        Objects.equals(this.remainingbalance, withdrawresult.remainingbalance) &&
         Objects.equals(this.time, withdrawresult.time) &&
         Objects.equals(this.dailyLimit, withdrawresult.dailyLimit);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(success, remainingbalance, time, dailyLimit);
+    return Objects.hash(success,time, dailyLimit);
   }
 
   @Override
@@ -137,7 +115,6 @@ public class Withdrawresult   {
     sb.append("class Withdrawresult {\n");
     
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
-    sb.append("    remainingbalance: ").append(toIndentedString(remainingbalance)).append("\n");
     sb.append("    time: ").append(toIndentedString(time)).append("\n");
     sb.append("    dailyLimit: ").append(toIndentedString(dailyLimit)).append("\n");
     sb.append("}");

@@ -84,6 +84,8 @@ public class AccountsApiController implements AccountsApi {
             Withdrawresult withdrawresult = new Withdrawresult();
             //withdrawresult.setRemainingbalance(account.getBalance());
             withdrawresult.setSuccess("withdraw success");
+            withdrawresult.setDailyLimit(700);
+            withdrawresult.setTime(LocalDateTime.now());
             return new ResponseEntity<>(withdrawresult,HttpStatus.ACCEPTED);
         }
         catch (Exception e){
@@ -111,6 +113,15 @@ public class AccountsApiController implements AccountsApi {
             return new ResponseEntity<Account>(account,HttpStatus.BAD_REQUEST);
             //throw new IllegalStateException(e.getMessage());
             //return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    public ResponseEntity<Void> closeAccount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN) {
+        try{
+            accountService.closeAccount(IBAN);
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        }catch(Exception exception){
+
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
     }
 
