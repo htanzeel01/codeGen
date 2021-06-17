@@ -1,5 +1,6 @@
 package Model;
 
+import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.UserToCreate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserToCreateTest {
-    UserToCreate user ;
+    private UserToCreate user ;
+
 
     @BeforeEach
     public void setup(){
@@ -18,7 +20,8 @@ class UserToCreateTest {
         assertNotNull(user);
     }
 
+
     @Test
-    void getUserId() {
+    public void getUserId() {
     }
 }

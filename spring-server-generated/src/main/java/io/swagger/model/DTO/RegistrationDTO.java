@@ -1,6 +1,8 @@
 package io.swagger.model.DTO;
 
 import io.swagger.model.UserTypeEnum;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 public class RegistrationDTO {
     private String userName;
@@ -9,6 +11,9 @@ public class RegistrationDTO {
     private String firstName;
     private String lastName;
     private UserTypeEnum usertype;
+    public RegistrationDTO(){
+
+    }
     public RegistrationDTO(String userName, String password, String email, String firstName, String lastName, UserTypeEnum usertype) {
         this.userName = userName;
         this.password = password;
@@ -39,6 +44,9 @@ public class RegistrationDTO {
     }
 
     public void setEmail(String email) {
+        if(!email.contains("@") || !email.contains(".")) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Not a valid email address");
+        }
         this.email = email;
     }
 
