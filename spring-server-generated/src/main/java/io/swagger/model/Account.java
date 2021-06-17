@@ -8,7 +8,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -23,22 +26,28 @@ import javax.validation.constraints.*;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "Account")
-public class Account   {
+public class Account {
   @Id
   @Column(name = "iban", columnDefinition = "VARCHAR(255)")
   private String iban;
+
   @JsonProperty("name")
-  private String name = null;
+  private String name ;
 
   @JsonProperty("balance")
-  private BigDecimal balance = null;
+  private BigDecimal balance;
 
 
-  public void setIban(String iban) {
-    this.iban = iban;
-  }
+  @Schema(hidden = true)
+
   public String getIban() {
     return iban;
+  }
+  public void setIban(String iban) {
+    if(!iban.contains("NL")) {
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Not a valid iban");
+    }
+    this.iban = iban;
   }
 
   public UserToCreate getUser() {
@@ -93,7 +102,7 @@ public class Account   {
     }
   }
   @JsonProperty("account_type")
-  private AccountTypeEnum accountType = null;
+  private AccountTypeEnum accountType;
 
   public Account name(String name) {
     this.name = name;
