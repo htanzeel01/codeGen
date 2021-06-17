@@ -1,6 +1,5 @@
-package Model;
+package io.swagger.Model;
 
-import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.UserToCreate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

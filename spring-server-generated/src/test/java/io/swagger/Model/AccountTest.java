@@ -1,4 +1,4 @@
-package Model;
+package io.swagger.Model;
 
 import io.swagger.model.Account;
 import org.junit.jupiter.api.Assertions;
