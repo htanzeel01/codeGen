@@ -74,7 +74,10 @@ public class AccountImplamantation implements AccountService{
     public int deposit(String iban, int amount) throws Exception {
         Account account = getbyIban(iban);
         BigDecimal newamount = account.getBalance().add(BigDecimal.valueOf(amount));
-        if (account != null) {
+        if (account.getAccountType() != Account.AccountTypeEnum.CURRENT){
+            throw new Exception("Account must be of type current");
+        }
+        else if (account != null) {
             return accountRepository.updateBalance(newamount, account.getIban());
         }
         else {
@@ -86,12 +89,18 @@ public class AccountImplamantation implements AccountService{
     public Account withdraw (String iban, int amount) throws Exception {
         Account account = getbyIban(iban);
         BigDecimal withdrawAmount = account.getBalance().subtract(BigDecimal.valueOf(amount));
-        if (withdrawAmount.compareTo(BigDecimal.ZERO)<0){
+        if (account.getAccountType() != Account.AccountTypeEnum.CURRENT){
+            throw new Exception("Account must be of type current");
+        }
+        else if (withdrawAmount.compareTo(BigDecimal.ZERO)<0){
             throw new Exception("Balance too low");
         }
-        else {
+        else if(account!= null){
             accountRepository.updateBalance(withdrawAmount,account.getIban());
             return getbyIban(iban);
+        }
+        else {
+            throw new Exception("incorrect iban");
         }
     }
 

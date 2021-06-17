@@ -10,5 +10,4 @@ public interface UserToCreateRepository extends JpaRepository<UserToCreate,Integ
     UserToCreate getUserToCreateByEmail(String email);
     UserToCreate findUserToCreateByUsername(String userName);
     UserToCreate findUserToCreateByUserId(int userId);
-
 }

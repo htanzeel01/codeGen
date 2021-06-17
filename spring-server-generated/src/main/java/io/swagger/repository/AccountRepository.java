@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface AccountRepository extends JpaRepository<Account,String> {
     Account getAccountByName(String name);
-    @Query(value = "Select * from Account where USER_ID=?1",nativeQuery = true)
+    @Query( "Select a from Account a where USER_ID=?1")
     List<Account> getAllByUserid(int userId);
 
     Account getAccountByIban(String iban);
