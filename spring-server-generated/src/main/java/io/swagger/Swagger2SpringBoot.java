@@ -29,7 +29,7 @@ public class Swagger2SpringBoot implements CommandLineRunner {
 
         @Override
         public int getExitCode() {
-            return 10; 
+            return 10;
         }
 
     }
