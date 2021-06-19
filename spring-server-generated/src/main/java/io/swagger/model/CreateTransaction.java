@@ -17,8 +17,6 @@ import javax.validation.constraints.*;
 
 
 public class CreateTransaction   {
-  @JsonProperty("id")
-  private String id = null;
 
   @JsonProperty("to")
   private String to = null;
@@ -26,28 +24,6 @@ public class CreateTransaction   {
   @JsonProperty("amount")
   private BigDecimal amount = null;
 
-  @JsonProperty("message")
-  private String message = null;
-
-  public CreateTransaction id(String id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(example = "E23b32", required = true, description = "")
-      @NotNull
-
-    public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
 
   public CreateTransaction to(String to) {
     this.to = to;
@@ -90,27 +66,6 @@ public class CreateTransaction   {
     this.amount = amount;
   }
 
-  public CreateTransaction message(String message) {
-    this.message = message;
-    return this;
-  }
-
-  /**
-   * Get message
-   * @return message
-   **/
-  @Schema(example = "This money is for the groceries.", required = true, description = "")
-      @NotNull
-
-    public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
-
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -120,15 +75,13 @@ public class CreateTransaction   {
       return false;
     }
     CreateTransaction createTransaction = (CreateTransaction) o;
-    return Objects.equals(this.id, createTransaction.id) &&
-        Objects.equals(this.to, createTransaction.to) &&
-        Objects.equals(this.amount, createTransaction.amount) &&
-        Objects.equals(this.message, createTransaction.message);
+    return Objects.equals(this.to, createTransaction.to) &&
+        Objects.equals(this.amount, createTransaction.amount);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, to, amount, message);
+    return Objects.hash(to, amount);
   }
 
   @Override
@@ -136,10 +89,8 @@ public class CreateTransaction   {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateTransaction {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    to: ").append(toIndentedString(to)).append("\n");
     sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
-    sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
     return sb.toString();
   }

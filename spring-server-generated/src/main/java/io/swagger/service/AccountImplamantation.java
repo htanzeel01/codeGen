@@ -125,5 +125,11 @@ public class AccountImplamantation implements AccountService{
 
     }
 
+    public void dequan(Account account, BigDecimal newBalance){
+        BigDecimal oldBalance = account.getBalance();
+        newBalance = oldBalance.subtract(newBalance);
+        accountRepository.updateBalance(newBalance, account.getIban());
+    }
+
 
 }

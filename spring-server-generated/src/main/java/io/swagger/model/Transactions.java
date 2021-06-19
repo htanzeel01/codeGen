@@ -6,6 +6,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -17,7 +21,8 @@ import javax.validation.constraints.*;
 
 
 public class Transactions   {
-  @JsonProperty("id")
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id = null;
 
   @JsonProperty("from")
