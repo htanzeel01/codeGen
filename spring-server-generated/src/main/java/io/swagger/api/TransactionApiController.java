@@ -49,18 +49,18 @@ public class TransactionApiController implements TransactionApi {
         this.request = request;
     }
 
-    public ResponseEntity<List<TransactionResult>> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body) {
+    public ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<List<TransactionResult>>(objectMapper.readValue("[ {\n  \"success\" : \"Transaction success\",\n  \"message\" : \"Finaly you made it\"\n}, {\n  \"success\" : \"Transaction success\",\n  \"message\" : \"Finaly you made it\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<TransactionResult>(objectMapper.readValue("[ {\n  \"success\" : \"Transaction success\",\n  \"message\" : \"Finaly you made it\"\n}, {\n  \"success\" : \"Transaction success\",\n  \"message\" : \"Finaly you made it\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<TransactionResult>>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<TransactionResult>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
-        return new ResponseEntity<List<TransactionResult>>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<TransactionResult>(HttpStatus.NOT_IMPLEMENTED);
     }
 
 }
