@@ -35,7 +35,7 @@ public class TransactionService {
         return transactionRepository.getTransactionById(id);
     }
 
-   /* public List<Transactions> getTransactionWithParameters(Integer userID, OffsetDateTime dateFrom, OffsetDateTime dateTo, ){
-        return
-    }*/
+   public List<Transactions> getTransactionswithParam(Integer userId, OffsetDateTime dateFrom, OffsetDateTime dateTo){
+        return transactionRepository.getTransactionswithParam(userId, dateFrom, dateTo);
+   }
 }

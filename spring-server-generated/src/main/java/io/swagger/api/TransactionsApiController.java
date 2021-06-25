@@ -3,7 +3,10 @@ package io.swagger.api;
 import io.swagger.model.Account;
 import io.swagger.model.Transactions;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.model.User;
+import io.swagger.model.UserToCreate;
 import io.swagger.service.TransactionService;
+import io.swagger.service.UserToCreateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -46,6 +49,7 @@ public class TransactionsApiController implements TransactionsApi {
     private final HttpServletRequest request;
 
     TransactionService transactionService;
+    UserToCreateService userToCreateService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public TransactionsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -65,6 +69,8 @@ public class TransactionsApiController implements TransactionsApi {
     }
 
     public ResponseEntity<List<Transactions>> getTransactions(@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "Enter the users ID" ,schema=@Schema()) @Valid @RequestParam(value = "UserID", required = false) String userID,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = false) String startDate,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = false) String endDate) {
+
+
         return new ResponseEntity<List<Transactions>>(HttpStatus.BAD_REQUEST);
 
     }

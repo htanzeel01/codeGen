@@ -65,15 +65,23 @@ public class TransactionApiController implements TransactionApi {
 
     /*public ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body) {*/
     public ResponseEntity<TransactionResult> createTransaction(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "amount", required = true) BigDecimal amount, @Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body) {
-        try {
-            Account account = accountService.getbyIban(iban);
-            transactionService.createTransaction(account, body);
-            accountService.dequan(account, body.getAmount());
-            return new ResponseEntity<TransactionResult>(HttpStatus.OK);
-        }
-        catch (Exception e){
+
+        Account account = accountService.getbyIban(iban);
+        BigDecimal balance = account.getBalance();
+
+        if (balance.equals(body.getAmount()) || balance.compareTo(body.getAmount()) < 0) {
             return new ResponseEntity<TransactionResult>(HttpStatus.BAD_REQUEST);
         }
+
+        try {
+                transactionService.createTransaction(account, body);
+                accountService.dequan(account, body.getAmount());
+                return new ResponseEntity<TransactionResult>(HttpStatus.OK);
+
+            }
+        catch(Exception e){
+                return new ResponseEntity<TransactionResult>(HttpStatus.BAD_REQUEST);
+            }
     }
 
 }
