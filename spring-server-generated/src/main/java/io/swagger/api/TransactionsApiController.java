@@ -60,13 +60,15 @@ public class TransactionsApiController implements TransactionsApi {
 
     public ResponseEntity<Transactions> getTransaction(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("ID") Integer ID) {
         try {
-            Transactions transaction = transactionService.getTransactionByID(ID);
-            return new ResponseEntity<Transactions>(transaction,HttpStatus.OK);
+            //Transactions transaction = transactionService.getTransactionByID(ID);
+            //return new ResponseEntity<Transactions>(transaction,HttpStatus.OK);
 
         }
         catch (Exception e){
             return new ResponseEntity<Transactions>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<Transactions>(HttpStatus.BAD_REQUEST);
+
     }
 
     public ResponseEntity<List<Transactions>> getTransactions(@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "Enter the users ID" ,schema=@Schema()) @Valid @RequestParam(value = "UserID", required = false) String userID,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = false) String startDate,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = false) String endDate) {

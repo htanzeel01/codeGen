@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+
+import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -18,7 +20,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-27T13:17:09.505Z[GMT]")
 
 @Entity
-@Table(name = "Transactions")
+@Table(name="Transactions")
 public class Transactions   {
 
   @Id
@@ -26,7 +28,7 @@ public class Transactions   {
   private Integer id;
 
   @JsonProperty("from")
-  private String from = null;
+  private String accountFrom = null;
 
   @JsonProperty("to")
   private String to = null;
@@ -47,9 +49,9 @@ public class Transactions   {
   public Transactions(){
 
   };
-  public Transactions(Integer id, String from, String to, BigDecimal amount, String userPerforming, String transactionDate) {
+  public Transactions(Integer id, String accountFrom, String to, BigDecimal amount, String userPerforming, String transactionDate) {
     this.id = id;
-    this.from = from;
+    this.accountFrom = accountFrom;
     this.to = to;
     this.amount = amount;
     this.userPerforming = userPerforming;
@@ -71,8 +73,8 @@ public class Transactions   {
     //.id = id;
   //}
 
-  public Transactions from(String from) {
-    this.from = from;
+  public Transactions from(String accountFrom) {
+    this.accountFrom = accountFrom;
     return this;
   }
 
@@ -84,11 +86,11 @@ public class Transactions   {
       @NotNull
 
     public String getFrom() {
-    return from;
+    return accountFrom;
   }
 
   public void setFrom(String from) {
-    this.from = from;
+    this.accountFrom = from;
   }
 
   public Transactions to(String to) {
@@ -183,7 +185,7 @@ public class Transactions   {
     }
     Transactions transactions = (Transactions) o;
     return Objects.equals(this.id, transactions.id) &&
-        Objects.equals(this.from, transactions.from) &&
+        Objects.equals(this.accountFrom, transactions.accountFrom) &&
         Objects.equals(this.to, transactions.to) &&
         Objects.equals(this.amount, transactions.amount) &&
         Objects.equals(this.userPerforming, transactions.userPerforming) &&
@@ -192,7 +194,7 @@ public class Transactions   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, from, to, amount, userPerforming, transactionDate);
+    return Objects.hash(id, accountFrom, to, amount, userPerforming, transactionDate);
   }
 
   @Override
@@ -201,7 +203,7 @@ public class Transactions   {
     sb.append("class Transactions {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    from: ").append(toIndentedString(from)).append("\n");
+    sb.append("    from: ").append(toIndentedString(accountFrom)).append("\n");
     sb.append("    to: ").append(toIndentedString(to)).append("\n");
     sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
     sb.append("    userPerforming: ").append(toIndentedString(userPerforming)).append("\n");
