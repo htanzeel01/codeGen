@@ -131,5 +131,10 @@ public class AccountImplamantation implements AccountService{
         accountRepository.updateBalance(newBalance, account.getIban());
     }
 
+    public void updateReceivingAccountBalance(Account account, BigDecimal newBalance){
+        BigDecimal oldBalance = account.getBalance();
+        newBalance = oldBalance.add(newBalance);
+        accountRepository.updateBalance(newBalance, account.getIban());
+    }
 
 }

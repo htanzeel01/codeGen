@@ -69,25 +69,27 @@ public class TransactionApiController implements TransactionApi {
         Account account = accountService.getbyIban(iban);
         BigDecimal balance = account.getBalance();
 
-        if (!balance.equals(body.getAmount()) || balance.compareTo(body.getAmount()) < 0) {
-            return new ResponseEntity<TransactionResult>(HttpStatus.BAD_REQUEST);
+        if (balance.compareTo(body.getAmount()) < 0) {
+            TransactionResult transactionResult = new TransactionResult();
+            transactionResult.setMessage("Nope");
+            transactionResult.setSuccess("You broke!");
+            return new ResponseEntity<TransactionResult>(transactionResult, HttpStatus.BAD_REQUEST);
         }
 
         try {
                 transactionService.createTransaction(account, body);
                 accountService.dequan(account, body.getAmount());
-
+                accountService.updateReceivingAccountBalance(account, body.getAmount());
                 TransactionResult transactionResult = new TransactionResult();
                 transactionResult.setMessage("Finally");
                 transactionResult.setSuccess("You made it!");
-                return new ResponseEntity<TransactionResult>(transactionResult,HttpStatus.OK);
+                return new ResponseEntity<TransactionResult>(transactionResult, HttpStatus.OK);
 
             }
         catch(Exception e){
             TransactionResult transactionResult = new TransactionResult();
             transactionResult.setMessage("Nope");
             transactionResult.setSuccess("You fucked up!");
-
             return new ResponseEntity<TransactionResult>(transactionResult, HttpStatus.BAD_REQUEST);
             }
     }

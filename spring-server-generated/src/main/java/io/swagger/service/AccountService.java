@@ -17,5 +17,6 @@ public interface AccountService {
     Account withdraw(String iban,int amount) throws Exception;
     void closeAccount(String iban);
     void dequan(Account account, BigDecimal bigDecimal);
+    void updateReceivingAccountBalance(Account account, BigDecimal bigDecimal);
 
 }
