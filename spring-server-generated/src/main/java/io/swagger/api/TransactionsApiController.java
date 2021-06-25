@@ -47,8 +47,9 @@ public class TransactionsApiController implements TransactionsApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
-
+    @Autowired
     TransactionService transactionService;
+    @Autowired
     UserToCreateService userToCreateService;
 
     @org.springframework.beans.factory.annotation.Autowired

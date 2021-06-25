@@ -16,7 +16,7 @@ public interface TransactionRepository extends JpaRepository<Transactions, Strin
     @Query( "Select t from Transactions t where id=?1")
     Transactions getTransactionById(Integer id);
 
-    List<Transactions> getTransactionswithParam(Integer userId, OffsetDateTime dateFrom, OffsetDateTime dateTo);
+    //List<Transactions> getTransactionswithParam(Integer userId, OffsetDateTime dateFrom, OffsetDateTime dateTo);
 
 
     //List<Transactions> getTransactionWithParameters(Integer userID, OffsetDateTime dateFrom, OffsetDateTime dateTo);

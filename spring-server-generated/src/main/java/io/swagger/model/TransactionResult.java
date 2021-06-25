@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -13,7 +15,6 @@ import javax.validation.constraints.*;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-27T13:17:09.505Z[GMT]")
-
 
 public class TransactionResult   {
   @JsonProperty("message")
@@ -25,6 +26,15 @@ public class TransactionResult   {
   public TransactionResult message(String message) {
     this.message = message;
     return this;
+  }
+
+  public TransactionResult(){
+
+  };
+
+  public TransactionResult(String message, String success) {
+    this.message = message;
+    this.success = success;
   }
 
   /**

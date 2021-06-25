@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -21,11 +18,12 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-27T13:17:09.505Z[GMT]")
 
 @Entity
+@Table(name = "Transactions")
 public class Transactions   {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private Integer id = null;
+  private Integer id;
 
   @JsonProperty("from")
   private String from = null;
@@ -46,21 +44,32 @@ public class Transactions   {
     this.id = id;
     return this;
   }
+  public Transactions(){
 
+  };
+  public Transactions(Integer id, String from, String to, BigDecimal amount, String userPerforming, String transactionDate) {
+    this.id = id;
+    this.from = from;
+    this.to = to;
+    this.amount = amount;
+    this.userPerforming = userPerforming;
+    this.transactionDate = transactionDate;
+  }
+/*
   /**
    * Get id
    * @return id
    **/
-  @Schema(example = "12345", required = true, description = "")
-      @NotNull
+  //@Schema(example = "12345", required = true, description = "")
+      //@NotNull
 
-    public Integer getId() {
-    return id;
-  }
+    //public Integer getId() {
+    //return id;
+  //}
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+  //public void setId(Integer id) {
+    //.id = id;
+  //}
 
   public Transactions from(String from) {
     this.from = from;
