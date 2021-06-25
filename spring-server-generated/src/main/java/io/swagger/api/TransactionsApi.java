@@ -45,7 +45,7 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions/{ID}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Transactions>> getTransaction(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("ID") Integer ID);
+    ResponseEntity<Transactions> getTransaction(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("ID") Integer ID);
 
 
     @Operation(summary = "Retrieve list of all transactions with optional parameters", description = "", security = {

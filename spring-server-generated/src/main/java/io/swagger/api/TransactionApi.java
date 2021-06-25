@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -39,15 +40,17 @@ public interface TransactionApi {
 
     @Operation(summary = "The user will be able to transfer funds", description = "", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Funds have been transfered", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TransactionResult.class)))),
-        
+
         @ApiResponse(responseCode = "400", description = "Funds have not been transfered") })
     @RequestMapping(value = "/transaction",
-        produces = { "application/json" }, 
-        consumes = { "application/json" }, 
+        produces = { "application/json" },
+        consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body);
+
+    /*ResponseEntity<List<TransactionResult>> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body);*/
+    ResponseEntity<TransactionResult> createTransaction(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "amount", required = true) BigDecimal amount, @Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body);
 
 }
 

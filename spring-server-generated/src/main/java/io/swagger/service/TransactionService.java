@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.threeten.bp.OffsetDateTime;
 
 import java.util.Date;
+import java.util.List;
+
 @Service
 public class TransactionService {
 
@@ -29,4 +31,11 @@ public class TransactionService {
         transactionRepository.save(transaction);
 
     }
+    public Transactions getTransactionByID(Integer id){
+        return transactionRepository.getTransactionById(id);
+    }
+
+   /* public List<Transactions> getTransactionWithParameters(Integer userID, OffsetDateTime dateFrom, OffsetDateTime dateTo, ){
+        return
+    }*/
 }

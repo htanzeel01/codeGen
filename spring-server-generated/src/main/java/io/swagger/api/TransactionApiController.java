@@ -1,8 +1,14 @@
 package io.swagger.api;
 
+import io.swagger.model.Account;
 import io.swagger.model.CreateTransaction;
 import io.swagger.model.TransactionResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.model.Transactions;
+import io.swagger.repository.AccountRepository;
+import io.swagger.repository.TransactionRepository;
+import io.swagger.service.AccountService;
+import io.swagger.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -14,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +37,7 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -43,24 +51,29 @@ public class TransactionApiController implements TransactionApi {
 
     private final HttpServletRequest request;
 
+    @Autowired
+    TransactionService transactionService;
+
+    @Autowired
+    AccountService accountService;
+
     @org.springframework.beans.factory.annotation.Autowired
     public TransactionApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
     }
 
-    public ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<TransactionResult>(objectMapper.readValue("[ {\n  \"success\" : \"Transaction success\",\n  \"message\" : \"Finaly you made it\"\n}, {\n  \"success\" : \"Transaction success\",\n  \"message\" : \"Finaly you made it\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<TransactionResult>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+    /*public ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body) {*/
+    public ResponseEntity<TransactionResult> createTransaction(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "amount", required = true) BigDecimal amount, @Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody CreateTransaction body) {
+        try {
+            Account account = accountService.getbyIban(iban);
+            transactionService.createTransaction(account, body);
+            accountService.dequan(account, body.getAmount());
+            return new ResponseEntity<TransactionResult>(HttpStatus.OK);
         }
-
-        return new ResponseEntity<TransactionResult>(HttpStatus.NOT_IMPLEMENTED);
+        catch (Exception e){
+            return new ResponseEntity<TransactionResult>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
