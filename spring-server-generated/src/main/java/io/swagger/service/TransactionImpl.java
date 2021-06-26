@@ -2,12 +2,14 @@ package io.swagger.service;
 
 import io.swagger.model.Account;
 import io.swagger.model.Transactions;
+import io.swagger.model.UserToCreate;
 import io.swagger.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transaction;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class TransactionImpl implements TransactionService {
@@ -40,4 +42,19 @@ public class TransactionImpl implements TransactionService {
     public Transactions WithdrawDeposit(Transactions transactions) {
         return transactionRepository.save(transactions);
     }
+
+    @Override
+    public Transactions getTransactionsById(Integer transactionId) throws Exception {
+            Transactions transactions = transactionRepository.findTransactionsById(transactionId);
+            //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            //auth.getAuthorities().contains("CUSTOMER")
+            if(transactions!=null){
+                return transactions;
+            }
+            else {
+                throw new Exception("Transations can not be found");
+            }
+
+    }
+
 }
