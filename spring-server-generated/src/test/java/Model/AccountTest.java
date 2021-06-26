@@ -30,13 +30,19 @@ class AccountTest {
     @Test
     public void ibanNotContainingNlWillThrowIllegalArgumentException() {
         Assertions.assertThrows(ResponseStatusException.class, () -> {
-            account.setIban("fbuf");
+            account.setIban("inho");
         });
     }
     @Test
     public void balancebelowzeroWillThrowIllegalArgumentException() {
         Assertions.assertThrows(ResponseStatusException.class, () -> {
             account.setBalance(BigDecimal.valueOf(-500));
+        });
+    }
+    @Test
+    public void ibanNotContainingINHOWillThrowIllegalArgumentException(){
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            account.setIban("nl");
         });
     }
 }

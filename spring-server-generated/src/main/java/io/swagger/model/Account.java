@@ -44,7 +44,7 @@ public class Account {
     return iban;
   }
   public void setIban(String iban) {
-    if(!iban.contains("NL")) {
+    if(!iban.contains("NL")&&!iban.contains("INHO")) {
       throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Not a valid iban");
     }
     this.iban = iban;
