@@ -1,6 +1,5 @@
-package Model;
+package io.swagger.model;
 
-import io.swagger.model.Account;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

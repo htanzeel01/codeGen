@@ -16,8 +16,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,21 +60,20 @@ public class UsersApiController implements UsersApi {
         this.request = request;
     }
 
-    public ResponseEntity<List<Account>> getUserAccount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId) {
+    public ResponseEntity<List<Account>> getUserAccount(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) {
         try {
-           return new ResponseEntity<List<Account>>(accountService.getAllByUser(userId),HttpStatus.OK);
-        }catch (Exception e){
-        return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<List<Account>>(accountService.getAllByUser(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    public ResponseEntity<UserToCreate> getUserByID(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId) {
+    public ResponseEntity<UserToCreate> getUserByID(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) {
 
         try {
-        UserToCreate user =  userToCreateService.getUserByUserId(userId);
-        return new ResponseEntity<UserToCreate>(user, HttpStatus.OK);
-        }
-        catch (Exception e){
+                UserToCreate user = userToCreateService.getUserByUserId(userId);
+                return new ResponseEntity<UserToCreate>(user, HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<UserToCreate>(HttpStatus.BAD_REQUEST);
         }
     }
