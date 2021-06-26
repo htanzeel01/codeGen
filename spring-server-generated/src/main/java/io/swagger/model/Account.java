@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -36,13 +37,19 @@ public class Account {
 
   @JsonProperty("balance")
   private BigDecimal balance;
+  @ManyToOne
+  @JoinColumn(name = "userId",nullable = true)
+  private UserToCreate user;
 
+  @OneToMany(mappedBy = "accountfrom")
+  private Set<Transactions> transactions;
 
   @Schema(hidden = true)
 
   public String getIban() {
     return iban;
   }
+
   public void setIban(String iban) {
     if(!iban.contains("NL")&&!iban.contains("INHO")) {
       throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Not a valid iban");
@@ -58,10 +65,6 @@ public class Account {
     this.user = user;
   }
 
-
-  @ManyToOne
-  @JoinColumn(name = "userId",nullable = true)
-  private UserToCreate user;
 
   public Account(String name, BigDecimal balance, AccountTypeEnum accountType) {
     this.name = name;
