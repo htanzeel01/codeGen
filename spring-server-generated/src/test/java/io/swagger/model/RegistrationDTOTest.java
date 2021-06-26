@@ -1,7 +1,6 @@
-package io.swagger.Model;
+package io.swagger.model;
 
 import io.swagger.model.DTO.RegistrationDTO;
-import io.swagger.model.UserTypeEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

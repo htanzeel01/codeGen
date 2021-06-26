@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 public class UserToCreateSteps {
     RestTemplate template = new RestTemplate();
     ResponseEntity<String> responseEntity;
-    String response;
+    private String response;
 
     HttpHeaders headers = new HttpHeaders();
     String baseUrl = "http://localhost:8089/users";
