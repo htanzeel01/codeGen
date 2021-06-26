@@ -10,8 +10,10 @@ import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.threeten.bp.OffsetDateTime;
 
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -27,15 +29,16 @@ public class TransactionService {
         transaction.setTo(body.getTo());
         transaction.setAmount(body.getAmount());
         transaction.setUserPerforming(account.getUser().getFirstName());
-        transaction.setTransactionDate(OffsetDateTime.now().toString());
+        transaction.getTransactionDate();
         transactionRepository.save(transaction);
 
     }
-    //public Transactions getTransactionByID(Integer id){
-        //return transactionRepository.getTransactionById(id);
-    //}
+    public Transactions getTransactionByID(Integer id){
+        return transactionRepository.getTransactionById(id);
+    }
 
-   /*public List<Transactions> getTransactionswithParam(Integer userId, OffsetDateTime dateFrom, OffsetDateTime dateTo){
-        return transactionRepository.getTransactionswithParam(userId, dateFrom, dateTo);
-   }*/
+   //public List<Transactions> getTransactions(Integer userID, OffsetDateTime start, OffsetDateTime end){
+        //return transactionRepository.getTransactions(userID, start, end);
+   //}
+
 }

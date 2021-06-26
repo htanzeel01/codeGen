@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -40,7 +41,7 @@ public class Transactions   {
   private String userPerforming = null;
 
   @JsonProperty("transactionDate")
-  private String transactionDate = null;
+  private OffsetDateTime transactionDate = OffsetDateTime.now();
 
   public Transactions id(Integer id) {
     this.id = id;
@@ -49,7 +50,7 @@ public class Transactions   {
   public Transactions(){
 
   };
-  public Transactions(Integer id, String accountFrom, String to, BigDecimal amount, String userPerforming, String transactionDate) {
+  public Transactions(Integer id, String accountFrom, String to, BigDecimal amount, String userPerforming, OffsetDateTime transactionDate) {
     this.id = id;
     this.accountFrom = accountFrom;
     this.to = to;
@@ -154,7 +155,7 @@ public class Transactions   {
     this.userPerforming = userPerforming;
   }
 
-  public Transactions transactionDate(String transactionDate) {
+  public Transactions transactionDate(OffsetDateTime transactionDate) {
     this.transactionDate = transactionDate;
     return this;
   }
@@ -166,11 +167,11 @@ public class Transactions   {
   @Schema(example = "15-05-2021", required = true, description = "")
       @NotNull
 
-    public String getTransactionDate() {
+    public OffsetDateTime getTransactionDate() {
     return transactionDate;
   }
 
-  public void setTransactionDate(String transactionDate) {
+  public void setTransactionDate(OffsetDateTime transactionDate) {
     this.transactionDate = transactionDate;
   }
 
@@ -222,4 +223,5 @@ public class Transactions   {
     }
     return o.toString().replace("\n", "\n    ");
   }
+
 }
