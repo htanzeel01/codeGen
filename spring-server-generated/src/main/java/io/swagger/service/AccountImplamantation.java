@@ -87,7 +87,7 @@ public class AccountImplamantation implements AccountService{
             transactions.setAccountfrom(account);
             transactions.setAmount(new BigDecimal(amount));
             transactions.setTransactionDate(LocalDateTime.now());
-            transactions.setUserperforming(account.getAccountType());
+            transactions.setUserperforming(account.getUser().getUserType());
             transactions.setAccountto("Deposit");
             transactionService.WithdrawDeposit(transactions);
             return accountRepository.updateBalance(newamount, account.getIban());
@@ -113,7 +113,7 @@ public class AccountImplamantation implements AccountService{
             transactions.setAccountfrom(account);
             transactions.setAmount(new BigDecimal(amount));
             transactions.setTransactionDate(LocalDateTime.now());
-            transactions.setUserperforming(account.getAccountType());
+            transactions.setUserperforming(account.getUser().getUserType());
             transactions.setAccountto("Withdraw");
             transactionService.WithdrawDeposit(transactions);
             return getbyIban(iban);

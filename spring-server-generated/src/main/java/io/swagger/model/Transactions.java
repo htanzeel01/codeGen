@@ -28,7 +28,7 @@ public class Transactions   {
   @Schema(hidden = true)
   private Integer id = null;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
   @JoinColumn(name = "iban")
   @JsonProperty("accountfrom")
   private Account accountfrom = null;
@@ -44,13 +44,13 @@ public class Transactions   {
   private LocalDateTime transactionDate = LocalDateTime.now();
 
   @JsonProperty("UserPerforming")
-  private Account.AccountTypeEnum userperforming = null;
+  private UserTypeEnum userperforming = null;
 
-  public Account.AccountTypeEnum getUserperforming() {
+  public UserTypeEnum getUserperforming() {
     return userperforming;
   }
 
-  public void setUserperforming(Account.AccountTypeEnum userperforming) {
+  public void setUserperforming(UserTypeEnum userperforming) {
     this.userperforming = userperforming;
   }
 

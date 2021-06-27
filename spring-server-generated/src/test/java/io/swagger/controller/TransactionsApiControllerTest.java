@@ -56,7 +56,7 @@ class TransactionsApiControllerTest {
         transactions.setAccountto("NL23INHO123456789");
         transactions.setAmount(new BigDecimal(20.00));
         transactions.setTransactionDate(LocalDateTime.now());
-        transactions.setUserperforming(Account.AccountTypeEnum.CURRENT);
+        transactions.setUserperforming(account.getUser().getUserType());
         transactions.setId(1);
     }
     @Test

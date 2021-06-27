@@ -41,7 +41,7 @@ public class Account {
   @JoinColumn(name = "userId",nullable = true)
   private UserToCreate user;
 
-  @OneToMany(mappedBy = "accountfrom")
+  @OneToMany(mappedBy = "accountfrom",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
   private Set<Transactions> transactions;
 
   @Schema(hidden = true)
@@ -66,7 +66,7 @@ public class Account {
   }
 
 
-  public Account(String name, BigDecimal balance, AccountTypeEnum accountType) {
+  public Account(String name, BigDecimal balance, Account.AccountTypeEnum accountType) {
     this.name = name;
     this.balance = balance;
     this.accountType = accountType;
@@ -161,9 +161,8 @@ public class Account {
    * @return accountType
    **/
   @Schema(example = "savings", required = true, description = "")
-      @NotNull
 
-    public AccountTypeEnum getAccountType() {
+  public AccountTypeEnum getAccountType() {
     return accountType;
   }
 

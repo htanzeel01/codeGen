@@ -31,7 +31,7 @@ public class TransactionTest {
         transactions.setAccountto(transactions.getAccountto());
         transactions.setAmount(new BigDecimal(20.00));
         transactions.setTransactionDate(LocalDateTime.now());
-        transactions.setUserperforming(Account.AccountTypeEnum.CURRENT);
+        transactions.setUserperforming(UserTypeEnum.ROLE_EMPLOYEE);
     }
 
     @Test
