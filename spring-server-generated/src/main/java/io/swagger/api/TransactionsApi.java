@@ -6,6 +6,7 @@
 package io.swagger.api;
 
 import io.swagger.annotations.ApiParam;
+import io.swagger.model.TransactionResult;
 import io.swagger.model.Transactions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -61,5 +62,17 @@ public interface TransactionsApi {
     ResponseEntity<List<Transactions>> getTransactionsFromAccountId(@Min(1) @ApiParam(value = "", required = true, allowableValues = "") @PathVariable("id") String id
             , @ApiParam(value = "The numbers of items to return") @Valid @RequestParam(value = "limit", required = false) Integer limit
     );
+    @Operation(summary = "The user will be able to transfer funds", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funds have been transfered", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TransactionResult.class)))),
+
+            @ApiResponse(responseCode = "400", description = "Funds have not been transfered") })
+    @RequestMapping(value = "/transaction",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Transactions body) throws Exception;
+
 }
 

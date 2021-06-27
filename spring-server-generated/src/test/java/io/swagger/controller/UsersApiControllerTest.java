@@ -43,7 +43,6 @@ class UsersApiControllerTest {
     @MockBean
     private UserToCreateImpl userToCreateImpl;
     private UserToCreate userToCreate;
-    private AccountService accountService;
 
     @BeforeEach
     public void setup(){
