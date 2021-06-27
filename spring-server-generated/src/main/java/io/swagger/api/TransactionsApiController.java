@@ -1,6 +1,7 @@
 package io.swagger.api;
 
 import io.swagger.annotations.ApiParam;
+import io.swagger.model.TransactionResult;
 import io.swagger.model.Transactions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.User;
@@ -35,6 +36,7 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -94,5 +96,20 @@ public class TransactionsApiController implements TransactionsApi {
               return new ResponseEntity<List<Transactions>>(HttpStatus.BAD_GATEWAY);
 
           }
+    }
+
+
+    public ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Transactions body) throws Exception {
+        try {
+            body.setTransactionDate(LocalDateTime.now());
+            body.setUserperforming(body.getAccountfrom().getAccountType());//to the user that calling the end point
+            transactionService.createTransaction(body);
+            TransactionResult transactionResult = new TransactionResult();
+            transactionResult.setMessage("You finaly made it!");
+            transactionResult.setSuccess("But you still bad!!!");
+            return new ResponseEntity<TransactionResult>(transactionResult, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<TransactionResult>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -20,6 +21,7 @@ public class UserToCreateSteps {
 
     HttpHeaders headers = new HttpHeaders();
     String baseUrl = "http://localhost:8089/users";
+
 
     @When("I retrieve all users")
     public void iRetrieveAllGuitars() throws URISyntaxException {
