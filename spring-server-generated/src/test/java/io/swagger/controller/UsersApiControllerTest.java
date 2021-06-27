@@ -3,6 +3,7 @@ package io.swagger.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.Account;
 import io.swagger.model.DTO.RegistrationDTO;
+import io.swagger.model.User;
 import io.swagger.model.UserToCreate;
 import io.swagger.model.UserTypeEnum;
 import io.swagger.repository.UserToCreateRepository;
@@ -13,6 +14,7 @@ import io.swagger.service.UserToCreateService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,11 +25,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -44,6 +49,7 @@ class UsersApiControllerTest {
     @MockBean
     private UserToCreateImpl userToCreateImpl;
     private UserToCreate userToCreate;
+    private UserToCreateRepository userToCreateRepository;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -67,7 +73,19 @@ class UsersApiControllerTest {
          when(userToCreateImpl.getUserByUserId(1)).thenReturn(userToCreate);
          assertThat("Its passed");
     }
-
+//    @Test
+//    public void testUpdate() throws Exception {
+//        // mocks:
+//        when(userToCreateImpl.getUserByUserId(1)).thenReturn(userToCreate);
+//
+//        // when:
+//        userToCreateImpl.updateUser(1,userToCreate);
+//
+//        // then:
+//        verify(userToCreateImpl).getUserByUserId(1);
+//        verify(userToCreateRepository).save(userToCreate);
+//
+//    }
 
 
 }
