@@ -32,7 +32,7 @@ public class TransactionImpl implements TransactionService {
         }
         if (transactions.getAccountfrom().getAccountType() == Account.AccountTypeEnum.SAVINGS) {
             if (!accountService.accountCheck(transactions.getAccountfrom().getIban(), transactions.getAccountto())) {
-                throw new Exception("Savings account can only tansfer to one of your accounts");
+                throw new Exception("Savings account can only transfer to one of your accounts");
             }
         }
         transactionRepository.save(transactions);
