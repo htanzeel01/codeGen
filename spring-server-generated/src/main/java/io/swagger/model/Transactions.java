@@ -28,7 +28,12 @@ public class Transactions   {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
-  @JsonProperty("from")
+
+  @ManyToOne
+  @JoinColumn(name = "iban")
+  private Account account;
+
+  @JsonProperty("to")
   private String accountFrom = null;
 
   @JsonProperty("to")

@@ -29,7 +29,7 @@ public class TransactionService {
         transaction.setTo(body.getTo());
         transaction.setAmount(body.getAmount());
         transaction.setUserPerforming(account.getUser().getFirstName());
-        transaction.getTransactionDate();
+        transaction.setTransactionDate(OffsetDateTime.now());
         transactionRepository.save(transaction);
 
     }
