@@ -97,7 +97,6 @@ public class UserToCreateImpl implements UserToCreateService {
         u.setUserType(user.getUserType());
         u.setPassword(user.getPassword());
         userToCreateRepository.save(u);
-        //userToCreateRepository.updateUser(u.getUserType(),u.getUsername(),u.getFirstName(),u.getLastName(),u.getEmail(),u.getPassword(),id);*/
 
     }
 }

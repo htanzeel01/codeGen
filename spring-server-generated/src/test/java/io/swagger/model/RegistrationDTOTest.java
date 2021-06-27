@@ -17,7 +17,7 @@ class RegistrationDTOTest {
         registrationDTO.setEmail("mahedi@gmail.com");
         registrationDTO.setFirstName("Mahedi");
         registrationDTO.setLastName("Mridul");
-        registrationDTO.setUsertype(UserTypeEnum.CUSTOMER);
+        registrationDTO.setUsertype(UserTypeEnum.ROLE_CUSTOMER);
 
         registrationDTO.setUserName("Mahedi");
         registrationDTO.setPassword("Mahedi1243");

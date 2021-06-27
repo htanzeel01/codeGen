@@ -31,7 +31,7 @@ public class User   {
   private String lastName = null;
 
   @JsonProperty("userType")
-  private UserTypeEnum userType = UserTypeEnum.CUSTOMER;
+  private UserTypeEnum userType = UserTypeEnum.ROLE_CUSTOMER;
 
   public User userId(Integer userId) {
     this.userId = userId;

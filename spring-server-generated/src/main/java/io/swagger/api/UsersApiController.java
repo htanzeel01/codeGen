@@ -68,6 +68,7 @@ public class UsersApiController implements UsersApi {
         }
     }
 
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<UserToCreate> getUserByID(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) {
 
         try {
@@ -77,7 +78,7 @@ public class UsersApiController implements UsersApi {
             return new ResponseEntity<UserToCreate>(HttpStatus.BAD_REQUEST);
         }
     }
-
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
     public ResponseEntity<List<UserToCreate>> getUsers(@Parameter(in = ParameterIn.QUERY, description = "find user by userName" ,schema=@Schema()) @Valid @RequestParam(value = "userName", required = false) String userName, @Min(0)@Parameter(in = ParameterIn.QUERY, description = "number of records to skip for pagination" ,schema=@Schema(allowableValues={  }
 )) @Valid @RequestParam(value = "skip", required = false) Integer skip, @Min(0) @Max(50) @Parameter(in = ParameterIn.QUERY, description = "maximum number of records to return" ,schema=@Schema(allowableValues={  }, maximum="50"
 , defaultValue="50")) @Valid @RequestParam(value = "limit", required = false, defaultValue="50") Integer limit) {
@@ -93,6 +94,7 @@ public class UsersApiController implements UsersApi {
 
     }
 
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Void> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId,@Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody UserToCreate body) {
         try {
             userToCreateService.updateUser(userId,body);

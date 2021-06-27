@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.UserToCreate;
 import io.swagger.model.UserTypeEnum;
+import io.swagger.service.UserToCreateImpl;
 import io.swagger.service.UserToCreateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,24 +28,26 @@ class RegisterApiControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private UserToCreateService userToCreateService;
-    private UserToCreate userToCreate;
+    private UserToCreateImpl userToCreateImpl;
+    private RegistrationDTO registrationDTO;
 
-//    @BeforeEach
-//    public void setup(){
-//        userToCreate = new UserToCreate("Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul",UserTypeEnum.CUSTOMER);
-//    }
+    @BeforeEach
+    public void setup(){
+        registrationDTO = new RegistrationDTO("Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul",UserTypeEnum.ROLE_CUSTOMER);
+    }
 
     @Test
+    @WithMockUser(username="admin",roles={"CUSTOMER","EMPLOYEE"})
     public void postingAUserToCreate201Created() throws Exception {
+        String query="Customer";
         ObjectMapper mapper = new ObjectMapper();
-        UserToCreate userToCreate= new UserToCreate("Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul", UserTypeEnum.CUSTOMER);
         this.mvc
                 .perform(
                         post("/register")
+                                .param("userType",query)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(mapper.writeValueAsString(userToCreate)))
-                .andExpect(status().isCreated());
+                                .content(mapper.writeValueAsString(registrationDTO)))
+                                 .andExpect(status().isCreated());
     }
 
 }
