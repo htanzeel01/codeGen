@@ -35,11 +35,8 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-<<<<<<< Updated upstream
 import java.util.ArrayList;
-=======
 import java.time.LocalDateTime;
->>>>>>> Stashed changes
 import java.util.List;
 import java.util.Map;
 
