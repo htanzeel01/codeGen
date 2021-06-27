@@ -24,8 +24,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -92,6 +91,19 @@ class AccountsApiControllerTest {
     public void depositintoAccountShouldReturnOk() throws Exception {
         when(accountImplamantation.deposit(account.getIban(),20)).thenReturn(1);
         assertThat("Test passed");
+    }
+    @Test
+    public void closingAccount()throws Exception{
+        mvc.perform(delete("/accounts/{IBAN}",1))
+                .andExpect(status().isNoContent());
+    }
+    public static String asJsonString(final Object object){
+        try{
+            return new ObjectMapper().writeValueAsString(object);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

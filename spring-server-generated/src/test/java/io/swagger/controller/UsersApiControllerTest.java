@@ -33,8 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,6 +71,22 @@ class UsersApiControllerTest {
     public void callingUsersById() throws Exception {
          when(userToCreateImpl.getUserByUserId(1)).thenReturn(userToCreate);
          assertThat("Its passed");
+    }
+    @Test
+    public void updateUserByID()throws Exception{
+        mvc.perform(
+                put("/users/{userId}",1)
+                        .content(asJsonString(userToCreate))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
+    public static String asJsonString(final Object object){
+        try{
+            return new ObjectMapper().writeValueAsString(object);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
     }
 //    @Test
 //    public void testUpdate() throws Exception {
