@@ -83,5 +83,15 @@ class AccountsApiControllerTest {
                                 .content(mapper.writeValueAsString(account)))
                 .andExpect(status().isOk());
     }
+    @Test
+    public void  withdrawfromAccountShouldReturnOk() throws Exception {
+        when(accountImplamantation.withdraw(account.getIban(),20)).thenReturn(account);
+        assertThat("Test passed");
+    }
+    @Test
+    public void depositintoAccountShouldReturnOk() throws Exception {
+        when(accountImplamantation.deposit(account.getIban(),20)).thenReturn(1);
+        assertThat("Test passed");
+    }
 
 }
