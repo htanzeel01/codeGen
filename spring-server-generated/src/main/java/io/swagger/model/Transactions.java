@@ -22,6 +22,7 @@ public class Transactions   {
   @Id
   @GeneratedValue
   @JsonProperty("id")
+  @Schema(hidden = true)
   private Integer id = null;
 
   @ManyToOne

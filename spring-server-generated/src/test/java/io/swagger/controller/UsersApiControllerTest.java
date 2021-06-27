@@ -67,7 +67,10 @@ class UsersApiControllerTest {
          when(userToCreateImpl.getUserByUserId(1)).thenReturn(userToCreate);
          assertThat("Its passed");
     }
-
+//    @Test
+//    public void updateUserShouldUpdatetheUserReturnsOk(){
+//        when(userToCreateImpl.updateUser(userToCreate.getUserId(),userToCreate)).thenReturn(userToCreate);
+//    }
 
 
 }
