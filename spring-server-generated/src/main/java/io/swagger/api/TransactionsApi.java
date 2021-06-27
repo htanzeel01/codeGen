@@ -67,7 +67,7 @@ public interface TransactionsApi {
             @ApiResponse(responseCode = "200", description = "Funds have been transfered", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TransactionResult.class)))),
 
             @ApiResponse(responseCode = "400", description = "Funds have not been transfered") })
-    @RequestMapping(value = "/transaction",
+    @RequestMapping(value = "/transactions",
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.POST)
