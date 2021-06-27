@@ -12,9 +12,8 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transactions,Integer> {
     Transactions findTransactionsById(int Id);
-    List<Transactions> getAllTransactions();
-
-    @Query("select t from Transactions t where to=?1")
-    List<Transactions> getTransactionsByAccountID(String accountTo);
+    //List<Transactions> getAllTransactions();
+    //@Query("select t from Transactions t where to=?1")
+    //List<Transactions> getTransactionsByAccountID(String accountTo);
 
 }

@@ -59,7 +59,7 @@ public class TransactionImpl implements TransactionService {
 
     }
 
-    @Override
+    /*@Override
     public List<Transactions> getTransactionsByAccountID(String accountID) throws Exception {
 
         List<Transactions> transactions = transactionRepository.getTransactionsByAccountID(accountID);
@@ -71,6 +71,8 @@ public class TransactionImpl implements TransactionService {
             throw new Exception("Transactions can not be found");
         }
 
-    }
+    }*/
+    @Override
+    public List<Transactions> getAllTransactions(){return (List<Transactions>) transactionRepository.findAll();}
 
 }

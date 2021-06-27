@@ -34,6 +34,7 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -80,9 +81,19 @@ public class TransactionsApiController implements TransactionsApi {
     }*/
 
     public ResponseEntity<List<Transactions>> getTransactionsFromAccountId(@Min(1) @ApiParam(value = "", required = true, allowableValues = "") @PathVariable("id") String id, @ApiParam(value = "The numbers of items to return") @Valid @RequestParam(value = "limit", required = false) Integer limit) {
+
         try {
-            List<Transactions> transactions = transactionService.getTransactionsByAccountID(id);
-            return new ResponseEntity<List<Transactions>>(transactions, HttpStatus.OK);
+
+            List<Transactions> transactions =transactionService.getAllTransactions();
+            List<Transactions> returnedTransactions = new ArrayList<>();
+
+            for (Transactions t: transactions
+                 ) {
+                if (t.getAccountto() == id){
+                    returnedTransactions.add(t);
+                }
+            }
+            return new ResponseEntity<List<Transactions>>(returnedTransactions, HttpStatus.OK);
 
         }
           catch (Exception e) {
