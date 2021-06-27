@@ -1,5 +1,6 @@
 package io.swagger.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.Account;
 import io.swagger.model.UserToCreate;
@@ -17,8 +18,13 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,13 +38,16 @@ class AccountsApiControllerTest {
     private AccountImplamantation accountImplamantation;
     private Account account;
     private UserToCreate userToCreate;
+    private List<Account> accountList;
+
     @BeforeEach
     public void setup(){
         userToCreate = new UserToCreate("Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul",UserTypeEnum.ROLE_CUSTOMER);
         account = new Account("Mahedi",new BigDecimal(100), Account.AccountTypeEnum.CURRENT);
-        account.setIban("NL55435435435435");
+        account.setIban("NL55INHO43543543511");
         account.setUser(userToCreate);
-
+        accountList = new ArrayList<>();
+        accountList.add(account);
    //     "Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul", UserTypeEnum.ROLE_CUSTOMER
 
     }
@@ -48,6 +57,28 @@ class AccountsApiControllerTest {
         this.mvc
                 .perform(
                         post("/openaccounts")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(mapper.writeValueAsString(account)))
+                .andExpect(status().isOk());
+    }
+    @Test
+    public void gettingAllAccountsbyIbanShouldReturnOk() throws Exception{
+        when(accountImplamantation.getbyIban("NL55INHO43543543511")).thenReturn(account);
+        assertThat("Its passed");
+    }
+    @Test
+    public void getUserAccountbyUserIDShouldReturnOK() throws Exception {
+        when(accountImplamantation.getAllByUser(1)).thenReturn(accountList);
+        assertThat("Test passed");
+    }
+    @Test
+    public void gettinguserbyNameShouldReturnOk() throws Exception {
+        String query="Mahedi";
+        ObjectMapper mapper = new ObjectMapper();
+        this.mvc
+                .perform(
+                        get("/accounts")
+                                .param("name",query)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(mapper.writeValueAsString(account)))
                 .andExpect(status().isOk());

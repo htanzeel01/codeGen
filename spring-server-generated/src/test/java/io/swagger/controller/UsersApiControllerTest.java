@@ -6,6 +6,7 @@ import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.UserToCreate;
 import io.swagger.model.UserTypeEnum;
 import io.swagger.repository.UserToCreateRepository;
+import io.swagger.service.AccountImplamantation;
 import io.swagger.service.AccountService;
 import io.swagger.service.UserToCreateImpl;
 import io.swagger.service.UserToCreateService;
@@ -45,7 +46,7 @@ class UsersApiControllerTest {
     private UserToCreate userToCreate;
 
     @BeforeEach
-    public void setup(){
+    public void setup() throws Exception {
         userToCreate = new UserToCreate("Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul",UserTypeEnum.ROLE_CUSTOMER);
     }
     @Test
@@ -55,8 +56,6 @@ class UsersApiControllerTest {
         this.mvc.perform(get("/users")).andExpect(
                  status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
-
-
     }
     @Test
     public void callingAllUsersShouldReturnOK() throws Exception {
@@ -68,10 +67,7 @@ class UsersApiControllerTest {
          when(userToCreateImpl.getUserByUserId(1)).thenReturn(userToCreate);
          assertThat("Its passed");
     }
-//    @Test
-//    public void getUserAccount() throws Exception {
-//        assertThat("Its passed");
-//    }
+
 
 
 }

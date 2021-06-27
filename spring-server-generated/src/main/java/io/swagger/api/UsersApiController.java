@@ -59,7 +59,7 @@ public class UsersApiController implements UsersApi {
         this.objectMapper = objectMapper;
         this.request = request;
     }
-
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<List<Account>> getUserAccount(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) {
         try {
             return new ResponseEntity<List<Account>>(accountService.getAllByUser(userId), HttpStatus.OK);
