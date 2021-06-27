@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,7 +58,7 @@ public class TransactionsApiController implements TransactionsApi {
         this.objectMapper = objectMapper;
         this.request = request;
     }
-
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Transactions> getTransaction(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("ID") Integer ID) {
 
         try {
@@ -81,7 +82,7 @@ public class TransactionsApiController implements TransactionsApi {
 
         return new ResponseEntity<List<Transactions>>(HttpStatus.NOT_IMPLEMENTED);
     }*/
-
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<List<Transactions>> getTransactionsFromAccountId(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "iban", required = true) String iban) {
 
         try {
@@ -98,7 +99,7 @@ public class TransactionsApiController implements TransactionsApi {
           }
     }
 
-
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
     public ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Transactions body) throws Exception {
         try {
             body.setTransactionDate(LocalDateTime.now());
