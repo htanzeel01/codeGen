@@ -2,6 +2,7 @@ package io.swagger.service;
 
 import io.swagger.model.Account;
 import io.swagger.model.Transactions;
+import io.swagger.model.UserTypeEnum;
 import io.swagger.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

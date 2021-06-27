@@ -74,7 +74,6 @@ public class AccountsApiController implements AccountsApi {
             return ResponseEntity.status((HttpStatus.BAD_GATEWAY)).build();
         }
     }
-    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Void> accountID(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") Integer IBAN) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);

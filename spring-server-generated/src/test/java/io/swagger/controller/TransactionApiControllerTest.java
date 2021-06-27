@@ -32,6 +32,5 @@ public class TransactionApiControllerTest {
         transactions.setUserperforming(Account.AccountTypeEnum.CURRENT);
     }
 
-    @Test
-    
+
 }
