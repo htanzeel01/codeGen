@@ -1,7 +1,9 @@
 package io.swagger.model;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -39,9 +41,8 @@ public class TransactionTest {
 
     @Test
     public void setNegativeAmountShouldThrowError() {
-        Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> transactions.setAmount(new BigDecimal(-10)));
-        assertEquals("Invalid amount.", exception.getMessage());
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            transactions.setAmount(BigDecimal.valueOf(-500));
+        });
     }
-
 }

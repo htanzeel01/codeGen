@@ -5,7 +5,10 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -38,7 +41,7 @@ public class Transactions   {
 
 @Schema(hidden = true)
   @JsonProperty("transactionDate")
-  private LocalDateTime transactionDate = null;
+  private LocalDateTime transactionDate = LocalDateTime.now();
 
   @JsonProperty("UserPerforming")
   private Account.AccountTypeEnum userperforming = null;
@@ -128,6 +131,9 @@ public class Transactions   {
   }
 
   public void setAmount(BigDecimal amount) {
+    if (amount.compareTo(BigDecimal.ZERO)<0){
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Balance too low");
+    }
     this.amount = amount;
   }
 
