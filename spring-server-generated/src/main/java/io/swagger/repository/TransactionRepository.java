@@ -11,7 +11,11 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transactions,Integer> {
+    Transactions findByAccountto(String iban);
     Transactions findTransactionsById(int Id);
+    Iterable<Transactions> getAllByAccountto(String iban);
+    @Query("SELECT t FROM Transactions AS t WHERE t.accountfrom LIKE ?1 OR t.accountto LIKE ?1 ORDER BY t.transactionDate ASC")
+    Iterable<Transactions> getTransactionsByIban(String iban);
     //List<Transactions> getAllTransactions();
     //@Query("select t from Transactions t where to=?1")
     //List<Transactions> getTransactionsByAccountID(String accountTo);

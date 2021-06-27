@@ -4,6 +4,7 @@ import io.swagger.model.Account;
 import io.swagger.model.Transactions;
 import io.swagger.model.UserToCreate;
 import io.swagger.repository.TransactionRepository;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+@Log
 @Service
 public class TransactionImpl implements TransactionService {
 
@@ -73,6 +74,17 @@ public class TransactionImpl implements TransactionService {
 
     }*/
     @Override
-    public List<Transactions> getAllTransactions(){return (List<Transactions>) transactionRepository.findAll();}
+    public List<Transactions> getAllTransactions(String iban) {
+        //Transactions transactions = transactionRepository.findByAccountto(iban);
+        List<Transactions> transactionsList = transactionRepository.findAll();
+        List<Transactions> returnTransactions = new ArrayList<>();
+        for(Transactions t: transactionsList
+        ) {
+            if (t.getAccountto().contains(iban)){
+                returnTransactions.add(t);
+            }
+        }
+        return returnTransactions;
+    }
 
 }

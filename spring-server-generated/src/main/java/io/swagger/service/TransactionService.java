@@ -19,5 +19,5 @@ public interface TransactionService {
     public Transactions WithdrawDeposit(Transactions transactions);
     public Transactions getTransactionsById(Integer transactionId) throws Exception;
     //public List<Transactions> getTransactionsByAccountID(String accountto) throws Exception;
-    public List<Transactions> getAllTransactions() throws Exception;
+    public List<Transactions> getAllTransactions(String iban) throws Exception;
 }

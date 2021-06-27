@@ -80,24 +80,18 @@ public class TransactionsApiController implements TransactionsApi {
         return new ResponseEntity<List<Transactions>>(HttpStatus.NOT_IMPLEMENTED);
     }*/
 
-    public ResponseEntity<List<Transactions>> getTransactionsFromAccountId(@Min(1) @ApiParam(value = "", required = true, allowableValues = "") @PathVariable("id") String id, @ApiParam(value = "The numbers of items to return") @Valid @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseEntity<List<Transactions>> getTransactionsFromAccountId(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "iban", required = true) String iban) {
 
         try {
-
-            List<Transactions> transactions =transactionService.getAllTransactions();
-            List<Transactions> returnedTransactions = new ArrayList<>();
-
-            for (Transactions t: transactions
-                 ) {
-                if (t.getAccountto() == id){
-                    returnedTransactions.add(t);
-                }
+            if (iban == null){
+                throw new Exception("iban is null");
             }
-            return new ResponseEntity<List<Transactions>>(returnedTransactions, HttpStatus.OK);
+            List<Transactions> transactions =transactionService.getAllTransactions(iban);
+            return new ResponseEntity<List<Transactions>>(transactions, HttpStatus.OK);
 
         }
           catch (Exception e) {
-              return new ResponseEntity<List<Transactions>>(HttpStatus.NO_CONTENT);
+              return new ResponseEntity<List<Transactions>>(HttpStatus.BAD_GATEWAY);
 
           }
     }
