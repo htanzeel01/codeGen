@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TransactionImpl implements TransactionService {
@@ -54,6 +56,20 @@ public class TransactionImpl implements TransactionService {
             else {
                 throw new Exception("Transations can not be found");
             }
+
+    }
+
+    @Override
+    public List<Transactions> getTransactionsByAccountID(String accountID) throws Exception {
+
+        List<Transactions> transactions = transactionRepository.getTransactionsByAccountID(accountID);
+
+        if (transactions != null){
+            return transactions;
+        }
+        else{
+            throw new Exception("Transactions can not be found");
+        }
 
     }
 

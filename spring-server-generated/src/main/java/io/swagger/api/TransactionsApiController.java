@@ -1,7 +1,9 @@
 package io.swagger.api;
 
+import io.swagger.annotations.ApiParam;
 import io.swagger.model.Transactions;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.model.User;
 import io.swagger.model.UserToCreate;
 import io.swagger.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,7 +65,7 @@ public class TransactionsApiController implements TransactionsApi {
 
         }
     }
-    public ResponseEntity<List<Transactions>> getTransactions(@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "Enter the users ID" ,schema=@Schema()) @Valid @RequestParam(value = "UserID", required = false) String userID,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = false) String startDate,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = false) String endDate) {
+    /*public ResponseEntity<List<Transactions>> getTransactions(@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "Enter the users ID" ,schema=@Schema()) @Valid @RequestParam(value = "UserID", required = false) String userID,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = false) String startDate,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = false) String endDate) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -75,6 +77,17 @@ public class TransactionsApiController implements TransactionsApi {
         }
 
         return new ResponseEntity<List<Transactions>>(HttpStatus.NOT_IMPLEMENTED);
-    }
+    }*/
 
+    public ResponseEntity<List<Transactions>> getTransactionsFromAccountId(@Min(1) @ApiParam(value = "", required = true, allowableValues = "") @PathVariable("id") String id, @ApiParam(value = "The numbers of items to return") @Valid @RequestParam(value = "limit", required = false) Integer limit) {
+        try {
+            List<Transactions> transactions = transactionService.getTransactionsByAccountID(id);
+            return new ResponseEntity<List<Transactions>>(transactions, HttpStatus.OK);
+
+        }
+          catch (Exception e) {
+              return new ResponseEntity<List<Transactions>>(HttpStatus.NO_CONTENT);
+
+          }
+    }
 }

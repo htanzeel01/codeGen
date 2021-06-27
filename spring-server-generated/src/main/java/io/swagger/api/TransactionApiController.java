@@ -62,7 +62,10 @@ public class TransactionApiController implements TransactionApi {
             body.setTransactionDate(LocalDateTime.now());
             body.setUserperforming(body.getAccountfrom().getAccountType());//to the user that calling the end point
             transactionService.createTransaction(body);
-            return new ResponseEntity<TransactionResult>(HttpStatus.OK);
+            TransactionResult transactionResult = new TransactionResult();
+            transactionResult.setMessage("You finaly made it!");
+            transactionResult.setSuccess("But you still bad!!!");
+            return new ResponseEntity<TransactionResult>(transactionResult, HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<TransactionResult>(HttpStatus.BAD_REQUEST);
