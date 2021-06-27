@@ -8,7 +8,8 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "src/test/resources/features",
         glue = "io.swagger.Api.steps",
-        plugin = "pretty"
+        plugin = "pretty",
+        strict = true
 )
 public class CucumberApiTest {
 }
