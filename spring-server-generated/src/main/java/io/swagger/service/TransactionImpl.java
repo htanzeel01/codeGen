@@ -60,19 +60,6 @@ public class TransactionImpl implements TransactionService {
 
     }
 
-    /*@Override
-    public List<Transactions> getTransactionsByAccountID(String accountID) throws Exception {
-
-        List<Transactions> transactions = transactionRepository.getTransactionsByAccountID(accountID);
-
-        if (transactions != null){
-            return transactions;
-        }
-        else{
-            throw new Exception("Transactions can not be found");
-        }
-
-    }*/
     @Override
     public List<Transactions> getAllTransactions(String iban) {
         //Transactions transactions = transactionRepository.findByAccountto(iban);
