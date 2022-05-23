@@ -84,7 +84,6 @@ public class UserToCreateImpl implements UserToCreateService {
     }
     @Override
     public void updateUser(Integer id,UserToCreate user){
-
         UserToCreate u = userToCreateRepository.findUserToCreateByUserId(id);
         u.setEmail(user.getEmail());
         u.setFirstName(user.getFirstName());
