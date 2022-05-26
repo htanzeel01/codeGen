@@ -77,7 +77,11 @@ class UserToCreateImplTest {
     }
 
     @Test
-    void getAllUsersByUserName() {
+    void getUsersByUserName() {
+        userToCreateRepository.save(userToCreate);
+        when(userToCreateRepository.findUserToCreateByUsername("mah")).thenReturn(userToCreate);
+        UserToCreate user = userService.getAllUsersByUserName("mah");
+        assertEquals(user, userToCreate);
     }
 
     @Test
