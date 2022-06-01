@@ -1,11 +1,16 @@
 package io.swagger.model;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -15,25 +20,39 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-27T13:17:09.505Z[GMT]")
 
-
+@Entity
 public class Transactions   {
+  @Id
+  @GeneratedValue
   @JsonProperty("id")
+  @Schema(hidden = true)
   private Integer id = null;
 
-  @JsonProperty("from")
-  private String from = null;
+  @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  @JoinColumn(name = "iban")
+  @JsonProperty("accountfrom")
+  private Account accountfrom = null;
 
   @JsonProperty("to")
-  private String to = null;
+  private String accountto = null;
 
   @JsonProperty("amount")
   private BigDecimal amount = null;
 
-  @JsonProperty("userPerforming")
-  private String userPerforming = null;
-
+@Schema(hidden = true)
   @JsonProperty("transactionDate")
-  private String transactionDate = null;
+  private LocalDateTime transactionDate = LocalDateTime.now();
+
+  @JsonProperty("UserPerforming")
+  private UserTypeEnum userperforming = null;
+
+  public UserTypeEnum getUserperforming() {
+    return userperforming;
+  }
+
+  public void setUserperforming(UserTypeEnum userperforming) {
+    this.userperforming = userperforming;
+  }
 
   public Transactions id(Integer id) {
     this.id = id;
@@ -55,8 +74,8 @@ public class Transactions   {
     this.id = id;
   }
 
-  public Transactions from(String from) {
-    this.from = from;
+  public Transactions from(Account from) {
+    this.accountfrom = from;
     return this;
   }
 
@@ -65,18 +84,17 @@ public class Transactions   {
    * @return from
    **/
   @Schema(example = "IBAN5555", required = true, description = "")
-      @NotNull
 
-    public String getFrom() {
-    return from;
+  public Account getAccountfrom() {
+    return accountfrom;
   }
 
-  public void setFrom(String from) {
-    this.from = from;
+  public void setAccountfrom(Account from) {
+    this.accountfrom = from;
   }
 
   public Transactions to(String to) {
-    this.to = to;
+    this.accountto = to;
     return this;
   }
 
@@ -87,12 +105,12 @@ public class Transactions   {
   @Schema(example = "IBAN6666", required = true, description = "")
       @NotNull
 
-    public String getTo() {
-    return to;
+    public String getAccountto() {
+    return accountto;
   }
 
-  public void setTo(String to) {
-    this.to = to;
+  public void setAccountto(String to) {
+    this.accountto = to;
   }
 
   public Transactions amount(BigDecimal amount) {
@@ -113,13 +131,13 @@ public class Transactions   {
   }
 
   public void setAmount(BigDecimal amount) {
+    if (amount.compareTo(BigDecimal.ZERO)<0){
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Balance too low");
+    }
     this.amount = amount;
   }
 
-  public Transactions userPerforming(String userPerforming) {
-    this.userPerforming = userPerforming;
-    return this;
-  }
+
 
   /**
    * Get userPerforming
@@ -128,15 +146,8 @@ public class Transactions   {
   @Schema(example = "54N45GHS", required = true, description = "")
       @NotNull
 
-    public String getUserPerforming() {
-    return userPerforming;
-  }
 
-  public void setUserPerforming(String userPerforming) {
-    this.userPerforming = userPerforming;
-  }
-
-  public Transactions transactionDate(String transactionDate) {
+  public Transactions transactionDate(LocalDateTime transactionDate) {
     this.transactionDate = transactionDate;
     return this;
   }
@@ -146,15 +157,15 @@ public class Transactions   {
    * @return transactionDate
    **/
   @Schema(example = "15-05-2021", required = true, description = "")
-      @NotNull
 
-    public String getTransactionDate() {
+  public LocalDateTime getTransactionDate() {
     return transactionDate;
   }
 
-  public void setTransactionDate(String transactionDate) {
+  public void setTransactionDate(LocalDateTime transactionDate) {
     this.transactionDate = transactionDate;
   }
+
 
 
   @Override
@@ -167,16 +178,16 @@ public class Transactions   {
     }
     Transactions transactions = (Transactions) o;
     return Objects.equals(this.id, transactions.id) &&
-        Objects.equals(this.from, transactions.from) &&
-        Objects.equals(this.to, transactions.to) &&
+        Objects.equals(this.accountfrom, transactions.accountfrom) &&
+        Objects.equals(this.accountto, transactions.accountto) &&
         Objects.equals(this.amount, transactions.amount) &&
-        Objects.equals(this.userPerforming, transactions.userPerforming) &&
+            Objects.equals(this.userperforming, transactions.userperforming) &&
         Objects.equals(this.transactionDate, transactions.transactionDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, from, to, amount, userPerforming, transactionDate);
+    return Objects.hash(id, accountfrom, accountto, amount,  transactionDate);
   }
 
   @Override
@@ -185,10 +196,9 @@ public class Transactions   {
     sb.append("class Transactions {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    from: ").append(toIndentedString(from)).append("\n");
-    sb.append("    to: ").append(toIndentedString(to)).append("\n");
+    sb.append("    from: ").append(toIndentedString(accountfrom)).append("\n");
+    sb.append("    to: ").append(toIndentedString(accountto)).append("\n");
     sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
-    sb.append("    userPerforming: ").append(toIndentedString(userPerforming)).append("\n");
     sb.append("    transactionDate: ").append(toIndentedString(transactionDate)).append("\n");
     sb.append("}");
     return sb.toString();

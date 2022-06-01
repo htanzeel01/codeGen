@@ -8,7 +8,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+import java.util.Set;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -23,22 +27,34 @@ import javax.validation.constraints.*;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "Account")
-public class Account   {
+public class Account {
   @Id
   @Column(name = "iban", columnDefinition = "VARCHAR(255)")
   private String iban;
+
   @JsonProperty("name")
-  private String name = null;
+  private String name ;
 
   @JsonProperty("balance")
-  private BigDecimal balance = null;
+  private BigDecimal balance;
+  @ManyToOne
+  @JoinColumn(name = "userId",nullable = true)
+  private UserToCreate user;
 
+  @OneToMany(mappedBy = "accountfrom",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  private Set<Transactions> transactions;
 
-  public void setIban(String iban) {
-    this.iban = iban;
-  }
+  @Schema(hidden = true)
+
   public String getIban() {
     return iban;
+  }
+
+  public void setIban(String iban) {
+    if(!iban.contains("NL")&&!iban.contains("INHO")) {
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Not a valid iban");
+    }
+    this.iban = iban;
   }
 
   public UserToCreate getUser() {
@@ -50,11 +66,7 @@ public class Account   {
   }
 
 
-  @ManyToOne
-  @JoinColumn(name = "userId",nullable = true)
-  private UserToCreate user;
-
-  public Account(String name, BigDecimal balance, AccountTypeEnum accountType) {
+  public Account(String name, BigDecimal balance, Account.AccountTypeEnum accountType) {
     this.name = name;
     this.balance = balance;
     this.accountType = accountType;
@@ -93,7 +105,7 @@ public class Account   {
     }
   }
   @JsonProperty("account_type")
-  private AccountTypeEnum accountType = null;
+  private AccountTypeEnum accountType;
 
   public Account name(String name) {
     this.name = name;
@@ -133,6 +145,9 @@ public class Account   {
   }
 
   public void setBalance(BigDecimal balance) {
+    if (balance.compareTo(BigDecimal.ZERO)<0){
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Balance too low");
+    }
     this.balance = balance;
   }
 
@@ -146,9 +161,8 @@ public class Account   {
    * @return accountType
    **/
   @Schema(example = "savings", required = true, description = "")
-      @NotNull
 
-    public AccountTypeEnum getAccountType() {
+  public AccountTypeEnum getAccountType() {
     return accountType;
   }
 

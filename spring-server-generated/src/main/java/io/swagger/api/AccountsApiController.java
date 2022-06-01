@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +60,7 @@ public class AccountsApiController implements AccountsApi {
         this.request = request;
     }
 
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
     public ResponseEntity<DepositResult> accountDeposit(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Deposit body) {
         try {
             accountService.deposit(iban, body.getDepositAmount());
@@ -72,12 +74,12 @@ public class AccountsApiController implements AccountsApi {
             return ResponseEntity.status((HttpStatus.BAD_GATEWAY)).build();
         }
     }
-
     public ResponseEntity<Void> accountID(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") Integer IBAN) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
     public ResponseEntity<Withdrawresult> accountWithdrawl(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Withdraw body) {
         try {
             Account account = accountService.withdraw(iban,body.getWithdrawAmount());
@@ -93,6 +95,7 @@ public class AccountsApiController implements AccountsApi {
         }
     }
 
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<List<Account>> getAccount(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "name", required = true) String name) {
         List<Account> accounts = accountService.GetAccountbyName(name);
         try {
@@ -104,6 +107,7 @@ public class AccountsApiController implements AccountsApi {
 
     }
 
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Account> getAccounts(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN) {
         Account account = accountService.getbyIban(IBAN);
         try {
@@ -115,6 +119,7 @@ public class AccountsApiController implements AccountsApi {
             //return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Void> closeAccount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN) {
         try{
             accountService.closeAccount(IBAN);

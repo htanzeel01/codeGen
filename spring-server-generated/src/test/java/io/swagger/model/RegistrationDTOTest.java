@@ -1,14 +1,10 @@
-package Model;
+package io.swagger.model;
 
 import io.swagger.model.DTO.RegistrationDTO;
-import io.swagger.model.UserToCreate;
-import io.swagger.model.UserTypeEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +17,7 @@ class RegistrationDTOTest {
         registrationDTO.setEmail("mahedi@gmail.com");
         registrationDTO.setFirstName("Mahedi");
         registrationDTO.setLastName("Mridul");
-        registrationDTO.setUsertype(UserTypeEnum.CUSTOMER);
+        registrationDTO.setUsertype(UserTypeEnum.ROLE_CUSTOMER);
 
         registrationDTO.setUserName("Mahedi");
         registrationDTO.setPassword("Mahedi1243");
