@@ -64,7 +64,7 @@ public class UserToCreate   {
    */
 
   @JsonProperty("userType")
-  private UserTypeEnum userType = UserTypeEnum.ROLE_CUSTOMER;
+  private UserTypeEnum userType = UserTypeEnum.CUSTOMER;
 
   public UserToCreate username(String username) {
     this.username = username;

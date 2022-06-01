@@ -8,9 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
  * Gets or Sets userType
  */
 public enum UserTypeEnum implements GrantedAuthority {
-  ROLE_EMPLOYEE("ROLE_EMPLOYEE"),
+  EMPLOYEE("Employee"),
 
-  ROLE_CUSTOMER("ROLE_CUSTOMER");
+  CUSTOMER("Customer");
 
   private String value;
 

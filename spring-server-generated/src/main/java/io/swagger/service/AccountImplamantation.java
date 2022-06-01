@@ -1,15 +1,12 @@
 package io.swagger.service;
 
 import io.swagger.model.Account;
-import io.swagger.model.Transactions;
-import io.swagger.model.UserTypeEnum;
 import io.swagger.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -20,8 +17,6 @@ public class AccountImplamantation implements AccountService{
 
     @Autowired
     AccountRepository accountRepository;
-    @Autowired
-    TransactionService transactionService;
 
     @Override
     public void save(Account account) throws Exception {
@@ -83,13 +78,6 @@ public class AccountImplamantation implements AccountService{
             throw new Exception("Account must be of type current");
         }
         else if (account != null) {
-            Transactions transactions = new Transactions();
-            transactions.setAccountfrom(account);
-            transactions.setAmount(new BigDecimal(amount));
-            transactions.setTransactionDate(LocalDateTime.now());
-            transactions.setUserperforming(account.getUser().getUserType());
-            transactions.setAccountto("Deposit");
-            transactionService.WithdrawDeposit(transactions);
             return accountRepository.updateBalance(newamount, account.getIban());
         }
         else {
@@ -109,13 +97,6 @@ public class AccountImplamantation implements AccountService{
         }
         else if(account!= null){
             accountRepository.updateBalance(withdrawAmount,account.getIban());
-            Transactions transactions = new Transactions();
-            transactions.setAccountfrom(account);
-            transactions.setAmount(new BigDecimal(amount));
-            transactions.setTransactionDate(LocalDateTime.now());
-            transactions.setUserperforming(account.getUser().getUserType());
-            transactions.setAccountto("Withdraw");
-            transactionService.WithdrawDeposit(transactions);
             return getbyIban(iban);
         }
         else {
@@ -142,35 +123,6 @@ public class AccountImplamantation implements AccountService{
             throw new EntityNotFoundException("Account does not exit");
         }
 
-    }
-
-    @Override
-    public int updateAmount(String iban, BigDecimal amount) throws Exception {
-        Account account = getbyIban(iban);
-        account.setBalance(account.getBalance().subtract(amount));
-        if (account.getBalance().compareTo(BigDecimal.ZERO)<0){
-            throw new Exception("Account does not have enough balance");
-        }
-        return accountRepository.updateBalance(account.getBalance(),account.getIban());
-    }
-
-    @Override
-    public int increaseAmount(String iban, BigDecimal amount) {
-        Account account = getbyIban(iban);
-        account.setBalance(account.getBalance().add(amount));
-        return accountRepository.updateBalance(account.getBalance(),account.getIban());
-    }
-
-    @Override
-    public boolean accountCheck(String iban1, String iban2) {
-        Account accountFrom = getbyIban(iban1);
-        Account accountTo = getbyIban(iban2);
-        if (accountFrom.getUser().getUserId() == accountTo.getUser().getUserId()){
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
 
