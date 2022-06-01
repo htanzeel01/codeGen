@@ -16,12 +16,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,26 +55,26 @@ public class UsersApiController implements UsersApi {
         this.objectMapper = objectMapper;
         this.request = request;
     }
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<List<Account>> getUserAccount(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) {
+
+    public ResponseEntity<List<Account>> getUserAccount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId) {
         try {
-            return new ResponseEntity<List<Account>>(accountService.getAllByUser(userId), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
+           return new ResponseEntity<List<Account>>(accountService.getAllByUser(userId),HttpStatus.OK);
+        }catch (Exception e){
+        return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<UserToCreate> getUserByID(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) {
+    public ResponseEntity<UserToCreate> getUserByID(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId) {
 
         try {
-                UserToCreate user = userToCreateService.getUserByUserId(userId);
-                return new ResponseEntity<UserToCreate>(user, HttpStatus.OK);
-        } catch (Exception e) {
+        UserToCreate user =  userToCreateService.getUserByUserId(userId);
+        return new ResponseEntity<UserToCreate>(user, HttpStatus.OK);
+        }
+        catch (Exception e){
             return new ResponseEntity<UserToCreate>(HttpStatus.BAD_REQUEST);
         }
     }
-    @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
+
     public ResponseEntity<List<UserToCreate>> getUsers(@Parameter(in = ParameterIn.QUERY, description = "find user by userName" ,schema=@Schema()) @Valid @RequestParam(value = "userName", required = false) String userName, @Min(0)@Parameter(in = ParameterIn.QUERY, description = "number of records to skip for pagination" ,schema=@Schema(allowableValues={  }
 )) @Valid @RequestParam(value = "skip", required = false) Integer skip, @Min(0) @Max(50) @Parameter(in = ParameterIn.QUERY, description = "maximum number of records to return" ,schema=@Schema(allowableValues={  }, maximum="50"
 , defaultValue="50")) @Valid @RequestParam(value = "limit", required = false, defaultValue="50") Integer limit) {
@@ -94,7 +90,6 @@ public class UsersApiController implements UsersApi {
 
     }
 
-    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Void> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId,@Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody UserToCreate body) {
         try {
             userToCreateService.updateUser(userId,body);
