@@ -61,14 +61,6 @@ public class UserToCreateImpTests {
     }
 
     @Test
-    void cheackMail() {
-    }
-
-    @Test
-    void login() {
-    }
-
-    @Test
     void getALLUsers() {
         when(userToCreateRepository.findAll()).thenReturn(userList);
         List<UserToCreate> userToCreates = userService.getALLUsers();
@@ -89,9 +81,5 @@ public class UserToCreateImpTests {
         when(userToCreateRepository.findUserToCreateByUserId(2)).thenReturn(userToCreate);
         UserToCreate user = userService.getUserByUserId(2);
         assertEquals(user, userToCreate);
-    }
-
-    @Test
-    void updateUser() {
     }
 }
