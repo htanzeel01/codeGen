@@ -1,9 +1,7 @@
 package io.swagger.Api.steps;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import cucumber.api.junit.Cucumber;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
