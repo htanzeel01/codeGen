@@ -40,6 +40,19 @@ public class TransactionImpl implements TransactionService {
         accountService.increaseAmount(transactions.getAccountto(), transactions.getAmount());
         return transactions;
     }
+    public boolean CheckTransactionDayLimit(Transactions transactions) throws Exception{
+        int totalTransactionAmount = transactionRepository.SumTransaction(transactions.getAccountfrom().getIban());
+        if (BigDecimal.valueOf(totalTransactionAmount).compareTo(transactions.getDayLimit())>0) {
+            throw new Exception("You have reached the daily limit for today");
+        }
+
+        else{
+            transactionRepository.UpdateDayLimit(BigDecimal.valueOf(totalTransactionAmount), transactions.getAccountfrom().getIban());
+            return true;
+        }
+
+    }
+
 
     @Override
     public Transactions WithdrawDeposit(Transactions transactions) {

@@ -46,6 +46,18 @@ public class Transactions   {
   @JsonProperty("UserPerforming")
   private UserTypeEnum userperforming = null;
 
+  public BigDecimal getDayLimit() {
+    return dayLimit;
+  }
+
+  public void setDayLimit(BigDecimal dayLimit) {
+    this.dayLimit = BigDecimal.valueOf(5000);
+  }
+
+  @Schema(hidden = true)
+  @JsonProperty("DailyLimit")
+  private BigDecimal dayLimit = null;
+
   public UserTypeEnum getUserperforming() {
     return userperforming;
   }
