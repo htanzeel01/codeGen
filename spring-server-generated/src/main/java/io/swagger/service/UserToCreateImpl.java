@@ -76,8 +76,6 @@ public class UserToCreateImpl implements UserToCreateService {
     }
     public UserToCreate getUserByUserId(Integer userId) throws Exception {
         UserToCreate user = userToCreateRepository.findUserToCreateByUserId(userId);
-        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //auth.getAuthorities().contains("CUSTOMER")
         if(user!=null){
         return user;
         }
@@ -88,7 +86,6 @@ public class UserToCreateImpl implements UserToCreateService {
     }
     @Override
     public void updateUser(Integer id,UserToCreate user){
-
         UserToCreate u = userToCreateRepository.findUserToCreateByUserId(id);
         u.setEmail(user.getEmail());
         u.setFirstName(user.getFirstName());

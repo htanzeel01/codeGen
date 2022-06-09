@@ -38,11 +38,11 @@ public class Account {
 
   @JsonProperty("balance")
   private BigDecimal balance;
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "userId",nullable = true)
   private UserToCreate user;
 
-  @OneToMany(mappedBy = "accountfrom",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "accountfrom",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
   private Set<Transactions> transactions;
 
   @Schema(hidden = true)

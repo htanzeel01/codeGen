@@ -7,6 +7,7 @@ import io.swagger.repository.TransactionRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.transaction.Transaction;
 import java.math.BigDecimal;
@@ -22,6 +23,20 @@ public class TransactionImpl implements TransactionService {
     @Autowired
     AccountService accountService;
 
+    public boolean CheckTransactionDayLimit(Transactions transactions) throws Exception{
+        int totalTransactionAmount = transactionRepository.SumTransaction(transactions.getAccountfrom().getIban());
+        if (BigDecimal.valueOf(totalTransactionAmount).compareTo(transactions.getDayLimit())>0) {
+            throw new Exception("You have reached the daily limit for today");
+        }
+
+        else{
+            transactionRepository.UpdateDayLimit(BigDecimal.valueOf(totalTransactionAmount), transactions.getAccountfrom().getIban());
+            return true;
+        }
+
+    }
+
+    @Transactional
     @Override
     public Transactions createTransaction(Transactions transactions) throws Exception {
         if (transactions.getAmount().compareTo(BigDecimal.valueOf(7000)) > 0) {
@@ -40,19 +55,6 @@ public class TransactionImpl implements TransactionService {
         accountService.increaseAmount(transactions.getAccountto(), transactions.getAmount());
         return transactions;
     }
-    public boolean CheckTransactionDayLimit(Transactions transactions) throws Exception{
-        int totalTransactionAmount = transactionRepository.SumTransaction(transactions.getAccountfrom().getIban());
-        if (BigDecimal.valueOf(totalTransactionAmount).compareTo(transactions.getDayLimit())>0) {
-            throw new Exception("You have reached the daily limit for today");
-        }
-
-        else{
-            transactionRepository.UpdateDayLimit(BigDecimal.valueOf(totalTransactionAmount), transactions.getAccountfrom().getIban());
-            return true;
-        }
-
-    }
-
 
     @Override
     public Transactions WithdrawDeposit(Transactions transactions) {

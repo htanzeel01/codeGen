@@ -103,11 +103,11 @@ public class TransactionsApiController implements TransactionsApi {
     public ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Transactions body) throws Exception {
         try {
             body.setTransactionDate(LocalDateTime.now());
-            body.setUserperforming(body.getAccountfrom().getUser().getUserType());//to the user that calling the end point
+            body.setUserperforming(body.getAccountfrom().getUser().getUserType());
             transactionService.createTransaction(body);
             TransactionResult transactionResult = new TransactionResult();
             transactionResult.setMessage("You finaly made it!");
-            transactionResult.setSuccess("But you still bad!!!");
+            transactionResult.setSuccess("Successfully transferred the amount");
             return new ResponseEntity<TransactionResult>(transactionResult, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<TransactionResult>(HttpStatus.BAD_REQUEST);

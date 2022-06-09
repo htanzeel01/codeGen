@@ -28,7 +28,7 @@ public class Transactions   {
   @Schema(hidden = true)
   private Integer id = null;
 
-  @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
   @JoinColumn(name = "iban")
   @JsonProperty("accountfrom")
   private Account accountfrom = null;
