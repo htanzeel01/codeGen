@@ -1,5 +1,6 @@
 package io.swagger.service;
 
+import io.swagger.exception.RegistrationInvalidException;
 import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.Result;
 import io.swagger.model.User;
@@ -37,15 +38,15 @@ public class UserToCreateImpl implements UserToCreateService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserToCreate createUser(RegistrationDTO registrationDTO) throws Exception {
-        UserToCreate userToCreate=new UserToCreate(registrationDTO.getUserName(),registrationDTO.getPassword(),registrationDTO.getEmail(),registrationDTO.getFirstName(),registrationDTO.getLastName(),registrationDTO.getUsertype());
-        UserToCreate registered=null;
-        if(cheackMail(registrationDTO)){
-            registered=userToCreateRepository.save(userToCreate);
+    public UserToCreate createUser(RegistrationDTO registrationDTO) throws RegistrationInvalidException {
+        UserToCreate userToCreate = new UserToCreate(registrationDTO.getUserName(),registrationDTO.getPassword(),registrationDTO.getEmail(),registrationDTO.getFirstName(),registrationDTO.getLastName(),registrationDTO.getUsertype());
+        UserToCreate registered = null;
+        if(cheackMail(registrationDTO) && !userToCreate.getUsername().isEmpty()){
+            registered = userToCreateRepository.save(userToCreate);
             return registered;
         }
         else{
-            throw new Exception("User can not be created");
+            throw new RegistrationInvalidException("User can not be created");
         }
 
     }
@@ -94,6 +95,5 @@ public class UserToCreateImpl implements UserToCreateService {
         u.setUserType(user.getUserType());
         u.setPassword(user.getPassword());
         userToCreateRepository.save(u);
-
     }
 }

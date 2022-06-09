@@ -1,5 +1,6 @@
 package io.swagger.api;
 
+import io.swagger.exception.RegistrationInvalidException;
 import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.Result;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,14 +43,13 @@ public class RegisterApiController implements RegisterApi {
 )) @Valid @RequestParam(value = "userType", required = true) String userType,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody RegistrationDTO registrationDTO) throws Exception {
 
         Result result = new Result();
-        //use try catch
         try {
             result.setMessage("User has been registered");
             result.setSuccess(true);
             userToCreateService.createUser(registrationDTO);
             return new ResponseEntity<Result>(result,HttpStatus.CREATED);
-        } catch (Exception e){
-            result.setMessage("User has not been registered");
+        } catch (RegistrationInvalidException ex){
+            result.setMessage(ex.getMessage());
             result.setSuccess(false);
             return new ResponseEntity<Result>(result,HttpStatus.BAD_REQUEST);
         }

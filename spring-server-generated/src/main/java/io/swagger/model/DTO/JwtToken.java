@@ -1,13 +1,10 @@
 package io.swagger.model.DTO;
 
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.model.UserToCreate;
-import io.swagger.service.UserToCreateService;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-
 import javax.validation.constraints.*;
 
 /**
@@ -18,12 +15,14 @@ import javax.validation.constraints.*;
 
 
 public class JwtToken   {
+  @JsonIgnore
   @JsonProperty("userId")
   private Integer userId = null;
 
   @JsonProperty("key")
   private String key = null;
 
+  @JsonIgnore
   @JsonProperty("value")
   private String value = null;
 
