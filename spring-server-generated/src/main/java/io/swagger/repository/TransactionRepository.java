@@ -19,11 +19,11 @@ public interface TransactionRepository extends JpaRepository<Transactions,Intege
     Iterable<Transactions> getAllByAccountto(String iban);
     @Query("SELECT t FROM Transactions AS t WHERE t.accountfrom LIKE ?1 OR t.accountto LIKE ?1 ORDER BY t.transactionDate ASC")
     Iterable<Transactions> getTransactionsByIban(String iban);
-    @Query ("SELECT SUM (amount) from Transactions  AS t where t.accountfrom = ?1 AND t.transactionDate = current_date ")
-    int SumTransaction (String iban);
+//    @Query ("SELECT SUM (amount) from Transactions  AS t where t.accountfrom.iban = ?1 AND t.transactionDate = current_date ")
+//    int SumTransaction (String iban);
 
     @Transactional
     @Modifying
-    @Query("update Transactions set DayLimit = ?1 where accountfrom = ?2")
+    @Query("update Transactions set dayLimit = ?1 where accountfrom.iban = ?2")
     int UpdateDayLimit (BigDecimal limit, String iban);
 }

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.transaction.Transaction;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,21 +26,24 @@ public class TransactionImpl implements TransactionService {
     AccountService accountService;
 
     public boolean CheckTransactionDayLimit(Transactions transactions) throws Exception{
-        int totalTransactionAmount = transactionRepository.SumTransaction(transactions.getAccountfrom().getIban());
-        if (BigDecimal.valueOf(totalTransactionAmount).compareTo(transactions.getDayLimit())>0) {
-            throw new Exception("You have reached the daily limit for today");
+         BigDecimal sum = BigDecimal.valueOf(0);
+        List<Transactions> transactionsList = getAllTransactions(transactions.getAccountfrom().getIban());
+        for (Transactions t: transactionsList
+             ) {
+            sum.add(t.getAmount());
         }
-
-        else{
-            transactionRepository.UpdateDayLimit(BigDecimal.valueOf(totalTransactionAmount), transactions.getAccountfrom().getIban());
-            return true;
+        if (sum.compareTo(transactions.getDayLimit())>0){
+            transactionRepository.UpdateDayLimit(transactions.getDayLimit().subtract(sum), transactions.getAccountfrom().getIban());
+            return false;
         }
-
+        transactionRepository.UpdateDayLimit(transactions.getDayLimit().subtract(sum), transactions.getAccountfrom().getIban());
+        return true;
     }
 
     @Transactional
     @Override
     public Transactions createTransaction(Transactions transactions) throws Exception {
+        //transactions.setDayLimit(BigDecimal.valueOf(5000));
         if (transactions.getAmount().compareTo(BigDecimal.valueOf(7000)) > 0) {
             throw new Exception("Amount cannot be more than transaction limit of 7000");
         }
@@ -49,6 +54,9 @@ public class TransactionImpl implements TransactionService {
             if (!accountService.accountCheck(transactions.getAccountfrom().getIban(), transactions.getAccountto())) {
                 throw new Exception("Savings account can only transfer to one of your accounts");
             }
+        }
+        if (CheckTransactionDayLimit(transactions)){
+            throw new Exception("Exceeding daily limit");
         }
         transactionRepository.save(transactions);
         accountService.updateAmount(transactions.getAccountfrom().getIban(), transactions.getAmount());
