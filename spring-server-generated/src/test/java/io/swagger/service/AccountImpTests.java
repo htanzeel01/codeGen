@@ -39,12 +39,13 @@ public class AccountImpTests {
     @BeforeEach
     public void setup() throws Exception {
         roles.add(UserTypeEnum.ROLE_EMPLOYEE);
-        registrationDTO = new RegistrationDTO("mah", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
-        UserToCreate user = new UserToCreate("mah", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
-        user.setUserId(2);
+        registrationDTO = new RegistrationDTO("mahedi", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
+        UserToCreate user = new UserToCreate("mahedi", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
+        user.setUserId(4);
         testUser = user;
         testAccount = new Account(testUser.getUsername(), BigDecimal.valueOf(95.53), Account.AccountTypeEnum.CURRENT);
         testAccount.setUser(user);
+        testAccount.setIban("NL55INHO");
         accountList.add(testAccount);
     }
 
@@ -64,6 +65,7 @@ public class AccountImpTests {
 
     @Test
     public void getAccounts() throws Exception {
+        accountService.save(testAccount);
         when(accountRepository.findAll()).thenReturn(accountList);
         List<Account> accountList1 = accountService.getAllByUser(testAccount.getUser().getUserId());
         assertEquals(accountList1, accountList);

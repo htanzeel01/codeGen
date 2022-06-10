@@ -1,5 +1,6 @@
 package io.swagger.service;
 
+import io.swagger.exception.IncorrectAccountException;
 import io.swagger.model.Account;
 import io.swagger.model.Transactions;
 import io.swagger.model.UserTypeEnum;
@@ -24,14 +25,14 @@ public class AccountImplamantation implements AccountService{
     TransactionService transactionService;
 
     @Override
-    public void save(Account account) throws Exception {
+    public void save(Account account) throws IncorrectAccountException {
         String setiban = ibanFormat();
         account.setIban(setiban);
         if (account.getUser() != null) {
             accountRepository.save(account);
         }
         else {
-            throw new Exception("incrorrect user");
+            throw new IncorrectAccountException("incrorrect user");
         }
     }
 
@@ -172,6 +173,4 @@ public class AccountImplamantation implements AccountService{
             return false;
         }
     }
-
-
 }

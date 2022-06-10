@@ -15,21 +15,11 @@ import javax.validation.constraints.*;
 
 
 public class JwtToken   {
-  @JsonIgnore
-  @JsonProperty("userId")
-  private Integer userId = null;
 
   @JsonProperty("key")
   private String key = null;
 
-  @JsonIgnore
-  @JsonProperty("value")
-  private String value = null;
 
-  public JwtToken userId(Integer userId) {
-    this.userId = userId;
-    return this;
-  }
 
   /**
    * Get userId
@@ -38,13 +28,6 @@ public class JwtToken   {
   @Schema(example = "2", required = true, description = "")
       @NotNull
 
-    public Integer getUserId() {
-    return userId;
-  }
-
-  public void setUserId(Integer userId) {
-    this.userId = userId;
-  }
 
   public JwtToken key(String key) {
     this.key = key;
@@ -66,25 +49,12 @@ public class JwtToken   {
     this.key = key;
   }
 
-  public JwtToken value(String value) {
-    this.value = value;
-    return this;
-  }
 
   /**
    * Get value
    * @return value
    **/
-  @Schema(example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c", required = true, description = "")
-      @NotNull
 
-    public String getValue() {
-    return value;
-  }
-
-  public void setValue(String value) {
-    this.value = value;
-  }
 
 
   @Override
@@ -96,24 +66,19 @@ public class JwtToken   {
       return false;
     }
     JwtToken jwtToken = (JwtToken) o;
-    return Objects.equals(this.userId, jwtToken.userId) &&
-        Objects.equals(this.key, jwtToken.key) &&
-        Objects.equals(this.value, jwtToken.value);
+    return
+        Objects.equals(this.key, jwtToken.key);
+
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(userId, key, value);
-  }
+
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class JwtToken {\n");
-    
-    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
+
     sb.append("    key: ").append(toIndentedString(key)).append("\n");
-    sb.append("    value: ").append(toIndentedString(value)).append("\n");
     sb.append("}");
     return sb.toString();
   }
