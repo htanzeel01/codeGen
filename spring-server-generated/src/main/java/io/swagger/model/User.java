@@ -1,26 +1,30 @@
 package io.swagger.model;
 
 import java.util.Objects;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
 import javax.validation.constraints.*;
 
 /**
  * User
  */
+@Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "username"})})
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-27T13:17:09.505Z[GMT]")
-
-
-public class User   {
-  @JsonProperty("userId")
-  private Integer userId = null;
-
+public class User {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private int userId;
   @JsonProperty("username")
   private String username = null;
-
+  @JsonProperty("Password")
+  private String password = null;
   @JsonProperty("email")
   private String email = null;
 
@@ -30,27 +34,28 @@ public class User   {
   @JsonProperty("lastName")
   private String lastName = null;
 
+  @OneToMany(mappedBy = "user")
+  private Set<Account> accounts;
+
+
+
+  public User(){
+
+  }
+  public User(String username, String password, String email, String firstName, String lastName, UserTypeEnum userType){
+    this.username=username;
+    this.password=password;
+    this.email=email;
+    this.firstName=firstName;
+    this.lastName=lastName;
+    this.userType=userType;
+  }
+  /**
+   * Gets or Sets userType
+   */
+
   @JsonProperty("userType")
   private UserTypeEnum userType = UserTypeEnum.ROLE_CUSTOMER;
-
-  public User userId(Integer userId) {
-    this.userId = userId;
-    return this;
-  }
-
-  /**
-   * Get userId
-   * @return userId
-   **/
-  @Schema(example = "100", description = "")
-  
-    public Integer getUserId() {
-    return userId;
-  }
-
-  public void setUserId(Integer userId) {
-    this.userId = userId;
-  }
 
   public User username(String username) {
     this.username = username;
@@ -70,6 +75,33 @@ public class User   {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+  public int getUserId() {
+    return userId;
+  }
+
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
+
+  public User password(String password) {
+    this.password = password;
+    return this;
+  }
+
+  /**
+   * Get password
+   * @return password
+   **/
+  @Schema(example = "rick123", required = true, description = "")
+      @NotNull
+
+    public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public User email(String email) {
@@ -162,8 +194,8 @@ public class User   {
       return false;
     }
     User user = (User) o;
-    return Objects.equals(this.userId, user.userId) &&
-        Objects.equals(this.username, user.username) &&
+    return Objects.equals(this.username, user.username) &&
+        Objects.equals(this.password, user.password) &&
         Objects.equals(this.email, user.email) &&
         Objects.equals(this.firstName, user.firstName) &&
         Objects.equals(this.lastName, user.lastName) &&
@@ -172,7 +204,7 @@ public class User   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(userId, username, email, firstName, lastName, userType);
+    return Objects.hash(username, password, email, firstName, lastName, userType);
   }
 
   @Override
@@ -180,8 +212,8 @@ public class User   {
     StringBuilder sb = new StringBuilder();
     sb.append("class User {\n");
     
-    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    firstName: ").append(toIndentedString(firstName)).append("\n");
     sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");

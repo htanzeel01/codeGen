@@ -1,6 +1,6 @@
 package io.swagger.service;
 
-import io.swagger.model.UserToCreate;
+import io.swagger.model.User;
 import io.swagger.repository.UserToCreateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,14 +14,14 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserToCreateRepository userToCreateRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserToCreate userToCreate =userToCreateRepository.findUserToCreateByUsername(username);
-        if(userToCreate==null){
+        User user =userToCreateRepository.findUserToCreateByUsername(username);
+        if(user ==null){
             throw new UsernameNotFoundException("User "+username+" not found");
         }
         UserDetails userDetails=org.springframework.security.core.userdetails.User
                 .withUsername(username)
-                .password(userToCreate.getPassword())
-                .authorities(userToCreate.getUserType())
+                .password(user.getPassword())
+                .authorities(user.getUserType())
                 .accountExpired(false)
                 .accountLocked(false)
                 .credentialsExpired(false)

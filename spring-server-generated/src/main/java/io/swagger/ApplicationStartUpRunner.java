@@ -2,13 +2,12 @@ package io.swagger;
 
 import io.swagger.model.Account;
 import io.swagger.model.DTO.RegistrationDTO;
-import io.swagger.model.UserToCreate;
+import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
-import io.swagger.repository.AccountRepository;
 import io.swagger.repository.UserToCreateRepository;
 import io.swagger.security.JwtTokenProvider;
 import io.swagger.service.AccountService;
-import io.swagger.service.UserToCreateImpl;
+import io.swagger.service.UserImplementation;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -37,33 +36,33 @@ public class ApplicationStartUpRunner implements ApplicationRunner {
 
     private RegistrationDTO registrationDTO;
 
-    private UserToCreate firstUserToCreate;
-    private UserToCreate secondUserToCreate;
+    private User firstUser;
+    private User secondUser;
     private Account firstAccount;
     private Account secondAccount;
     @Autowired
-    private UserToCreateImpl userService;
+    private UserImplementation userService;
     @Autowired
     private AccountService accountService;
 
-    List<UserToCreate> userList = new ArrayList<>();
+    List<User> userList = new ArrayList<>();
     List<Account> accounts = new ArrayList<>();
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         registrationDTO = new RegistrationDTO("mah", "mah!", "mah@.nl", "mah", "mri", UserTypeEnum.ROLE_EMPLOYEE);
         RegistrationDTO r1 = new RegistrationDTO("rick","rick!","rick@.nl","rick","ricki",UserTypeEnum.ROLE_CUSTOMER);
-        firstUserToCreate = new UserToCreate("mah", "mah!", "mah@.nl", "mah", "mri", UserTypeEnum.ROLE_EMPLOYEE);
-        secondUserToCreate =  new UserToCreate("rick","rick!","rick@.nl","rick","ricki",UserTypeEnum.ROLE_CUSTOMER);
-        firstUserToCreate.setUserId(1);
-        secondUserToCreate.setUserId(2);
-        userList.add(firstUserToCreate);
-        userList.add(secondUserToCreate);
+        firstUser = new User("mah", "mah!", "mah@.nl", "mah", "mri", UserTypeEnum.ROLE_EMPLOYEE);
+        secondUser =  new User("rick","rick!","rick@.nl","rick","ricki",UserTypeEnum.ROLE_CUSTOMER);
+        firstUser.setUserId(1);
+        secondUser.setUserId(2);
+        userList.add(firstUser);
+        userList.add(secondUser);
         userToCreateRepository.saveAll(userList);
-        firstAccount = new Account(firstUserToCreate.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
-        firstAccount.setUser(firstUserToCreate);
-        secondAccount = new Account(secondUserToCreate.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
-        secondAccount.setUser(secondUserToCreate);
+        firstAccount = new Account(firstUser.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
+        firstAccount.setUser(firstUser);
+        secondAccount = new Account(secondUser.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
+        secondAccount.setUser(secondUser);
         accounts.add(firstAccount);
         accounts.add(secondAccount);
         accountService.save(firstAccount);

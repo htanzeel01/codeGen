@@ -3,7 +3,7 @@ package io.swagger.service;
 import io.swagger.Swagger2SpringBoot;
 import io.swagger.model.Account;
 import io.swagger.model.DTO.RegistrationDTO;
-import io.swagger.model.UserToCreate;
+import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
 import io.swagger.repository.AccountRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +31,7 @@ public class AccountImpTests {
     private RegistrationDTO registrationDTO;
     List<Account> accountList = new ArrayList<>();
     private ArrayList<UserTypeEnum> roles = new ArrayList<>();
-    private UserToCreate testUser;
+    private User testUser;
     private Account testAccount;
     private String testIban1 = "TESTIBAN001";
     private String testIban2 = "TESTIBAN002";
@@ -40,7 +40,7 @@ public class AccountImpTests {
     public void setup() throws Exception {
         roles.add(UserTypeEnum.ROLE_EMPLOYEE);
         registrationDTO = new RegistrationDTO("mahedi", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
-        UserToCreate user = new UserToCreate("mahedi", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
+        User user = new User("mahedi", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
         user.setUserId(4);
         testUser = user;
         testAccount = new Account(testUser.getUsername(), BigDecimal.valueOf(95.53), Account.AccountTypeEnum.CURRENT);

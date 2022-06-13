@@ -1,12 +1,10 @@
 package io.swagger.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.Account;
-import io.swagger.model.UserToCreate;
+import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
 import io.swagger.service.AccountImplamantation;
-import io.swagger.service.UserToCreateImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,15 +33,15 @@ class AccountsApiControllerTest {
     @MockBean
     private AccountImplamantation accountImplamantation;
     private Account account;
-    private UserToCreate userToCreate;
+    private User user;
     private List<Account> accountList;
 
     @BeforeEach
     public void setup(){
-        userToCreate = new UserToCreate("Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul",UserTypeEnum.ROLE_CUSTOMER);
+        user = new User("Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul",UserTypeEnum.ROLE_CUSTOMER);
         account = new Account("Mahedi",new BigDecimal(100), Account.AccountTypeEnum.CURRENT);
         account.setIban("NL55INHO43543543511");
-        account.setUser(userToCreate);
+        account.setUser(user);
         accountList = new ArrayList<>();
         accountList.add(account);
    //     "Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul", UserTypeEnum.ROLE_CUSTOMER

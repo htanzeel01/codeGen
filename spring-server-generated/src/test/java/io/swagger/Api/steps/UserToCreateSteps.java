@@ -42,7 +42,7 @@ public class UserToCreateSteps {
         responseEntity = template.getForEntity(uri, String.class);
     }
 
-    @Then("The The UserToCreate is Mahedi {string}")
+    @Then("The The User is Mahedi {string}")
     public void theGuitarBrandIs(String name) throws JSONException {
         response = responseEntity.getBody();
         Assert.assertEquals(name,

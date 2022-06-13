@@ -5,26 +5,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TransactionTest {
     private Transactions transactions;
     private Account account;
-    private UserToCreate userToCreate;
+    private User user;
 
 
 
     @BeforeEach
     public void setup(){
-        userToCreate = new UserToCreate("Erjano","123456","erjano@gmail.com","Erjano","Baku",UserTypeEnum.ROLE_CUSTOMER);
+        user = new User("Erjano","123456","erjano@gmail.com","Erjano","Baku",UserTypeEnum.ROLE_CUSTOMER);
         account = new Account("Mahedi",new BigDecimal(100), Account.AccountTypeEnum.CURRENT);
         account.setIban("NL55435435435435");
-        account.setUser(userToCreate);
+        account.setUser(user);
 
         transactions = new Transactions();
         transactions.setAccountfrom(account);

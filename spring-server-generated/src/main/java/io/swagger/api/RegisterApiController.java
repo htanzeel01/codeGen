@@ -4,7 +4,7 @@ import io.swagger.exception.RegistrationInvalidException;
 import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.Result;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.service.UserToCreateService;
+import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,7 +31,7 @@ public class RegisterApiController implements RegisterApi {
 
     private final HttpServletRequest request;
     @Autowired
-    private UserToCreateService userToCreateService;
+    private UserService userService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public RegisterApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -46,7 +46,7 @@ public class RegisterApiController implements RegisterApi {
         try {
             result.setMessage("User has been registered");
             result.setSuccess(true);
-            userToCreateService.createUser(registrationDTO);
+            userService.createUser(registrationDTO);
             return new ResponseEntity<Result>(result,HttpStatus.CREATED);
         } catch (RegistrationInvalidException ex){
             result.setMessage(ex.getMessage());

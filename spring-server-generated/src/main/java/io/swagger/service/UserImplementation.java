@@ -2,29 +2,22 @@ package io.swagger.service;
 
 import io.swagger.exception.RegistrationInvalidException;
 import io.swagger.model.DTO.RegistrationDTO;
-import io.swagger.model.Result;
 import io.swagger.model.User;
-import io.swagger.model.UserToCreate;
 import io.swagger.model.UserTypeEnum;
 import io.swagger.repository.UserToCreateRepository;
 import io.swagger.security.JwtTokenProvider;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 @Log
 @Service
-public class UserToCreateImpl implements UserToCreateService {
+public class UserImplementation implements UserService {
     @Autowired
     private UserToCreateRepository userToCreateRepository;
 
@@ -38,11 +31,11 @@ public class UserToCreateImpl implements UserToCreateService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserToCreate createUser(RegistrationDTO registrationDTO) throws RegistrationInvalidException {
-        UserToCreate userToCreate = new UserToCreate(registrationDTO.getUserName(),registrationDTO.getPassword(),registrationDTO.getEmail(),registrationDTO.getFirstName(),registrationDTO.getLastName(),registrationDTO.getUsertype());
-        UserToCreate registered = null;
-        if(cheackMail(registrationDTO) && !userToCreate.getUsername().isEmpty()){
-            registered = userToCreateRepository.save(userToCreate);
+    public User createUser(RegistrationDTO registrationDTO) throws RegistrationInvalidException {
+        User user = new User(registrationDTO.getUserName(),registrationDTO.getPassword(),registrationDTO.getEmail(),registrationDTO.getFirstName(),registrationDTO.getLastName(),registrationDTO.getUsertype());
+        User registered = null;
+        if(cheackMail(registrationDTO) && !user.getUsername().isEmpty()){
+            registered = userToCreateRepository.save(user);
             return registered;
         }
         else{
@@ -53,30 +46,30 @@ public class UserToCreateImpl implements UserToCreateService {
 
     @Override
     public boolean cheackMail(RegistrationDTO registrationDTO) {
-        UserToCreate emailChecker =userToCreateRepository.getUserToCreateByEmail(registrationDTO.getEmail());
+        User emailChecker =userToCreateRepository.getUserToCreateByEmail(registrationDTO.getEmail());
         if(emailChecker==null){
             return true;
         }
         return false;
     }
     public String login(String username,String password) throws Exception {
-        UserToCreate userToCreate = userToCreateRepository.findUserToCreateByUsername(username);
+        User user = userToCreateRepository.findUserToCreateByUsername(username);
         List<UserTypeEnum>enums=new ArrayList<>();
-        enums.add(userToCreate.getUserType());
-        if(userToCreate!=null){
+        enums.add(user.getUserType());
+        if(user !=null){
         return jwtTokenProvider.createToken(username,enums);
         }else {
             throw new Exception("User name or password is wrong");
         }
     }
-    public List<UserToCreate> getALLUsers(){
-        return (List<UserToCreate>) userToCreateRepository.findAll();
+    public List<User> getALLUsers(){
+        return (List<User>) userToCreateRepository.findAll();
     }
-    public UserToCreate getAllUsersByUserName(String username){
-        return (UserToCreate) userToCreateRepository.findUserToCreateByUsername(username);
+    public User getAllUsersByUserName(String username){
+        return (User) userToCreateRepository.findUserToCreateByUsername(username);
     }
-    public UserToCreate getUserByUserId(Integer userId) throws Exception {
-        UserToCreate user = userToCreateRepository.findUserToCreateByUserId(userId);
+    public User getUserByUserId(Integer userId) throws Exception {
+        User user = userToCreateRepository.findUserToCreateByUserId(userId);
         if(user!=null){
         return user;
         }
@@ -86,8 +79,8 @@ public class UserToCreateImpl implements UserToCreateService {
 
     }
     @Override
-    public void updateUser(Integer id,UserToCreate user){
-        UserToCreate u = userToCreateRepository.findUserToCreateByUserId(id);
+    public void updateUser(Integer id, User user){
+        User u = userToCreateRepository.findUserToCreateByUserId(id);
         u.setEmail(user.getEmail());
         u.setFirstName(user.getFirstName());
         u.setUsername(user.getUsername());

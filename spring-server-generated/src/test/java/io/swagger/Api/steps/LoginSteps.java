@@ -3,9 +3,9 @@ package io.swagger.Api.steps;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Given;
 import io.swagger.model.DTO.RegistrationDTO;
-import io.swagger.model.UserToCreate;
+import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
-import io.swagger.service.UserToCreateService;
+import io.swagger.service.UserService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -26,10 +26,10 @@ import static org.junit.Assert.assertTrue;
 public class LoginSteps {
     private ResponseEntity<String> stringResponse;
     @Autowired
-    private UserToCreateService userService;
+    private UserService userService;
     private PasswordEncoder encoder;
     private ObjectMapper objectMapper;
-    private UserToCreate user;
+    private User user;
     private String protocol = "http";
     private String port = "8089";
     private String host = "localhost";
@@ -58,7 +58,7 @@ public class LoginSteps {
         this.user = null;
     }
 
-    private UserToCreate createMockUserToCreate(UserTypeEnum userType) throws Exception {
+    private User createMockUserToCreate(UserTypeEnum userType) throws Exception {
         ArrayList<UserTypeEnum> roles = new ArrayList<>();
         roles.add(userType);
         RegistrationDTO registrationDTO = new RegistrationDTO("mah", "secret-key", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);

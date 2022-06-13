@@ -1,6 +1,5 @@
 package io.swagger.model;
 
-import java.math.RoundingMode;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -40,7 +39,7 @@ public class Account {
   private BigDecimal balance;
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "userId",nullable = true)
-  private UserToCreate user;
+  private User user;
 
   @OneToMany(mappedBy = "accountfrom",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
   private Set<Transactions> transactions;
@@ -58,11 +57,11 @@ public class Account {
     this.iban = iban;
   }
 
-  public UserToCreate getUser() {
+  public User getUser() {
     return user;
   }
 
-  public void setUser(UserToCreate user) {
+  public void setUser(User user) {
     this.user = user;
   }
 

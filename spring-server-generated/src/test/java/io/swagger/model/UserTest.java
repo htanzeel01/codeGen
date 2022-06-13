@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserToCreateTest {
-    private UserToCreate user ;
+class UserTest {
+    private User user ;
 
 
     @BeforeEach
     public void setup(){
-        user = new UserToCreate();
+        user = new User();
     }
     @Test
     public void UserToCreateCanNotBeNull(){
