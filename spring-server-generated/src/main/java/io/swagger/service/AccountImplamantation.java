@@ -3,6 +3,7 @@ package io.swagger.service;
 import io.swagger.exception.IncorrectAccountException;
 import io.swagger.model.Account;
 import io.swagger.model.Transactions;
+import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
 import io.swagger.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,16 @@ public class AccountImplamantation implements AccountService{
     AccountRepository accountRepository;
     @Autowired
     TransactionService transactionService;
+    @Autowired
+    UserService userService;
 
     @Override
     public void save(Account account) throws IncorrectAccountException {
         String setiban = ibanFormat();
         account.setIban(setiban);
+        User user = userService.getAllUsersByUserName(account.getUser().getUsername());
+        account.setUser(user);
+        account.setName(user.getFirstName());
         if (account.getUser() != null) {
             accountRepository.save(account);
         }

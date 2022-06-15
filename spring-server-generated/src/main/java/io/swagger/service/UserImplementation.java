@@ -34,7 +34,7 @@ public class UserImplementation implements UserService {
     public User createUser(RegistrationDTO registrationDTO) throws RegistrationInvalidException {
         User user = new User(registrationDTO.getUserName(),registrationDTO.getPassword(),registrationDTO.getEmail(),registrationDTO.getFirstName(),registrationDTO.getLastName(),registrationDTO.getUsertype());
         User registered = null;
-        if(cheackMail(registrationDTO) && !user.getUsername().isEmpty()){
+        if(checkMail(registrationDTO) && !user.getUsername().isEmpty()){
             registered = userToCreateRepository.save(user);
             return registered;
         }
@@ -45,9 +45,9 @@ public class UserImplementation implements UserService {
     }
 
     @Override
-    public boolean cheackMail(RegistrationDTO registrationDTO) {
-        User emailChecker =userToCreateRepository.getUserToCreateByEmail(registrationDTO.getEmail());
-        if(emailChecker==null){
+    public boolean checkMail(RegistrationDTO registrationDTO) {
+        User userbyEmail =userToCreateRepository.getUserToCreateByEmail(registrationDTO.getEmail());
+        if(userbyEmail==null){
             return true;
         }
         return false;

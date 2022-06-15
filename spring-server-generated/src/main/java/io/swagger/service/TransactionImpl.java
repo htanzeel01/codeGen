@@ -42,6 +42,7 @@ public class TransactionImpl implements TransactionService {
     @Transactional
     @Override
     public Transactions createTransaction(Transactions transactions) throws Exception {
+        transactions.setAccountfrom(accountService.getbyIban(transactions.getAccountfrom().getIban()));
         if (transactions.getAmount().compareTo(BigDecimal.valueOf(7000)) > 0) {
             throw new Exception("Amount cannot be more than transaction limit of 7000");
         }

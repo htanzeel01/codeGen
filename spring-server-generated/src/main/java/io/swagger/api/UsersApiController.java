@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -61,13 +62,13 @@ public class UsersApiController implements UsersApi {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String emailAddress = authentication.getName();
 
-            User loggedInUser = userService.getUserByEmailAddress(emailAddress);
-            if (loggedInUser == null) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No authentication token was given.");
-            }
-            if (!loggedInUser.getRole().contains(UserRole.EMPLOYEE) && loggedInUser.getId() != userId) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The current auth token does not provide access to this resource.");
-            }
+//            User loggedInUser = userService.getUserByEmailAddress(emailAddress);
+//            if (loggedInUser == null) {
+//                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No authentication token was given.");
+//            }
+//            if (!loggedInUser.getRole().contains(UserRole.EMPLOYEE) && loggedInUser.getUserId() != userId) {
+//                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The current auth token does not provide access to this resource.");
+//            }
             User user = userService.getUserByUserId(userId);
             return new ResponseEntity<User>(user, HttpStatus.OK);
         } catch (Exception e) {
