@@ -1,5 +1,7 @@
 package io.swagger.api;
 
+import io.swagger.exception.UnAuthorizedException;
+import io.swagger.exception.UserNotFoundException;
 import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.AccountService;
@@ -7,6 +9,7 @@ import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,25 +58,19 @@ public class UsersApiController implements UsersApi {
         }
     }
 
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<User> getUserByID(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) {
-
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String emailAddress = authentication.getName();
-
-//            User loggedInUser = userService.getUserByEmailAddress(emailAddress);
-//            if (loggedInUser == null) {
-//                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No authentication token was given.");
-//            }
-//            if (!loggedInUser.getRole().contains(UserRole.EMPLOYEE) && loggedInUser.getUserId() != userId) {
-//                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The current auth token does not provide access to this resource.");
-//            }
-            User user = userService.getUserByUserId(userId);
-            return new ResponseEntity<User>(user, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+    //@PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<User> getUserByID(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) throws Exception {
+            if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
+                User user = userService.getUserByUserId(userId);
+                return new ResponseEntity<User>(user, HttpStatus.OK);
+            }
+            else if(userService.getLoggedInUser().getUserType() != UserTypeEnum.ROLE_EMPLOYEE){
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, " you are not authorized to access this url ");
+            }
+            else {
+            throw new UserNotFoundException("User not found");
         }
+
     }
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
     public ResponseEntity<List<User>> getUsers(@Parameter(in = ParameterIn.QUERY, description = "find user by userName" ,schema=@Schema()) @Valid @RequestParam(value = "userName", required = false) String userName, @Min(0)@Parameter(in = ParameterIn.QUERY, description = "number of records to skip for pagination" ,schema=@Schema(allowableValues={  }

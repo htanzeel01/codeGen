@@ -68,7 +68,7 @@ public class UserImpTests {
     @Test
     void getUsersByUserName() {
         userToCreateRepository.save(user);
-        when(userToCreateRepository.findUserToCreateByUsername("mah")).thenReturn(user);
+        when(userToCreateRepository.findUserByUsername("mah")).thenReturn(user);
         User user = userService.getAllUsersByUserName("mah");
         assertEquals(user, this.user);
     }
@@ -76,7 +76,7 @@ public class UserImpTests {
     @Test
     void getUserByUserId() throws Exception {
         userToCreateRepository.save(user);
-        when(userToCreateRepository.findUserToCreateByUserId(2)).thenReturn(user);
+        when(userToCreateRepository.findUserByUserId(2)).thenReturn(user);
         User user = userService.getUserByUserId(2);
         assertEquals(user, this.user);
     }

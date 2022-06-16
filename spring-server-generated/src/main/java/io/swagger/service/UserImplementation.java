@@ -1,6 +1,7 @@
 package io.swagger.service;
 
 import io.swagger.exception.RegistrationInvalidException;
+import io.swagger.exception.UserNotFoundException;
 import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
@@ -8,9 +9,13 @@ import io.swagger.repository.UserToCreateRepository;
 import io.swagger.security.JwtTokenProvider;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +51,14 @@ public class UserImplementation implements UserService {
 
     @Override
     public boolean checkMail(RegistrationDTO registrationDTO) {
-        User userbyEmail =userToCreateRepository.getUserToCreateByEmail(registrationDTO.getEmail());
-        if(userbyEmail==null){
+        User userByEmail =userToCreateRepository.getUserByEmail(registrationDTO.getEmail());
+        if(userByEmail==null){
             return true;
         }
         return false;
     }
     public String login(String username,String password) throws Exception {
-        User user = userToCreateRepository.findUserToCreateByUsername(username);
+        User user = userToCreateRepository.findUserByUsername(username);
         List<UserTypeEnum>enums=new ArrayList<>();
         enums.add(user.getUserType());
         if(user !=null){
@@ -66,21 +71,21 @@ public class UserImplementation implements UserService {
         return (List<User>) userToCreateRepository.findAll();
     }
     public User getAllUsersByUserName(String username){
-        return (User) userToCreateRepository.findUserToCreateByUsername(username);
+        return (User) userToCreateRepository.findUserByUsername(username);
     }
-    public User getUserByUserId(Integer userId) throws Exception {
-        User user = userToCreateRepository.findUserToCreateByUserId(userId);
+    public User getUserByUserId(Integer userId) throws UserNotFoundException {
+        User user = userToCreateRepository.findUserByUserId(userId);
         if(user!=null){
         return user;
         }
         else {
-            throw new Exception("Users can not be found");
+            throw new UserNotFoundException("Users can not be found");
         }
 
     }
     @Override
     public void updateUser(Integer id, User user){
-        User u = userToCreateRepository.findUserToCreateByUserId(id);
+        User u = userToCreateRepository.findUserByUserId(id);
         u.setEmail(user.getEmail());
         u.setFirstName(user.getFirstName());
         u.setUsername(user.getUsername());
@@ -88,5 +93,14 @@ public class UserImplementation implements UserService {
         u.setUserType(user.getUserType());
         u.setPassword(user.getPassword());
         userToCreateRepository.save(u);
+    }
+    public User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailAddress = authentication.getName();
+        User loggedInUser = userToCreateRepository.findUserByUsername(emailAddress);
+        if (loggedInUser == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No authentication token was given.");
+        }
+        return loggedInUser;
     }
 }

@@ -15,4 +15,5 @@ public interface UserService {
     User getAllUsersByUserName(String username);
     User getUserByUserId(Integer userId) throws Exception;
     void updateUser(Integer id, User user);
+    User getLoggedInUser();
 }
