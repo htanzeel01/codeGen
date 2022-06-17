@@ -55,7 +55,9 @@ public class ApplicationStartUpRunner implements ApplicationRunner {
         firstUser = new User("mah", "mah!", "mah@.nl", "mah", "mri", UserTypeEnum.ROLE_EMPLOYEE);
         secondUser =  new User("rick","rick!","rick@.nl","rick","ricki",UserTypeEnum.ROLE_CUSTOMER);
         firstUser.setUserId(1);
+        firstUser.setPassword(passwordEncoder.encode(firstUser.getPassword()));
         secondUser.setUserId(2);
+        secondUser.setPassword(passwordEncoder.encode(secondUser.getPassword()));
         userList.add(firstUser);
         userList.add(secondUser);
         userToCreateRepository.saveAll(userList);

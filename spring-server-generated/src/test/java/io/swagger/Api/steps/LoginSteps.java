@@ -61,7 +61,7 @@ public class LoginSteps {
     private User createMockUserToCreate(UserTypeEnum userType) throws Exception {
         ArrayList<UserTypeEnum> roles = new ArrayList<>();
         roles.add(userType);
-        RegistrationDTO registrationDTO = new RegistrationDTO("mah", "secret-key", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
+        RegistrationDTO registrationDTO = new RegistrationDTO("mah", "mah!", "user@gmail.nl", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
         userService.createUser(registrationDTO);
         return user;
     }
@@ -85,7 +85,7 @@ public class LoginSteps {
         // Build body
         Map<String, String> map = new HashMap<String, String>();
         map.put("username", "mah");
-        map.put("password", "secret-key");
+        map.put("password", "mah!");
 
         ResponseEntity<String> responseEntity = postRequest(uri, headers, map);
         String response = responseEntity.getBody();

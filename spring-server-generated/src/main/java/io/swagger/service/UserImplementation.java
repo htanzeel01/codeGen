@@ -10,6 +10,7 @@ import io.swagger.repository.UserToCreateRepository;
 import io.swagger.security.JwtTokenProvider;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -34,11 +35,14 @@ public class UserImplementation implements UserService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder ;
 
     @Override
     public User createUser(RegistrationDTO registrationDTO) throws RegistrationInvalidException {
-        User user = new User(registrationDTO.getUserName(),registrationDTO.getPassword(),registrationDTO.getEmail(),registrationDTO.getFirstName(),registrationDTO.getLastName(),registrationDTO.getUsertype());
+        User user = new User(registrationDTO.getUserName(),registrationDTO.getPassword(),
+                registrationDTO.getEmail(),registrationDTO.getFirstName(),registrationDTO.getLastName(),
+                registrationDTO.getUsertype());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User registered = null;
         if(checkMail(registrationDTO) && !user.getUsername().isEmpty()){
             registered = userToCreateRepository.save(user);
@@ -47,7 +51,6 @@ public class UserImplementation implements UserService {
         else{
             throw new RegistrationInvalidException("User can not be created");
         }
-
     }
 
     @Override
@@ -99,7 +102,7 @@ public class UserImplementation implements UserService {
             throw new IncorrectUserTypeException(" Your enter user Role is not Valid");
         }
         if (user.getUserType() != null) u.setUserType(user.getUserType());
-        if (user.getPassword() != null) u.setPassword(user.getPassword());
+        if (user.getPassword() != null) u.setPassword(passwordEncoder.encode(user.getPassword()));
         userToCreateRepository.save(u);
     }
     public User getLoggedInUser() {

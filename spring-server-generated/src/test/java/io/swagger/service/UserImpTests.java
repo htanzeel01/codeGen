@@ -30,6 +30,8 @@ public class UserImpTests {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     private AuthenticationManager authenticationManager;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
     private RegistrationDTO registrationDTO;
     private User user;
@@ -41,8 +43,11 @@ public class UserImpTests {
     @BeforeEach
     public void setup() {
         registrationDTO = new RegistrationDTO("mah", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
-        User user = new User("mah", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
+        User user = new User(registrationDTO.getUserName(), registrationDTO.getPassword(),
+                registrationDTO.getEmail(),registrationDTO.getFirstName(),registrationDTO.getLastName(),
+                registrationDTO.getUsertype());
         user.setUserId(2);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         this.user = user;
         userList.add(this.user);
     }
@@ -79,5 +84,32 @@ public class UserImpTests {
         when(userToCreateRepository.findUserByUserId(2)).thenReturn(user);
         User user = userService.getUserByUserId(2);
         assertEquals(user, this.user);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Test
+    void updateUser(){
+
     }
 }

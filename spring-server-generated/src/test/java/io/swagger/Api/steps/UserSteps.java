@@ -5,18 +5,16 @@ import io.cucumber.java.en.When;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.runner.RunWith;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 
-public class UserToCreateSteps {
+public class UserSteps {
     RestTemplate template = new RestTemplate();
     ResponseEntity<String> responseEntity;
     private String response;
