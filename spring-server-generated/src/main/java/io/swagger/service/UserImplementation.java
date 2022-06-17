@@ -94,7 +94,7 @@ public class UserImplementation implements UserService {
         if (user.getFirstName() != null) u.setFirstName(user.getFirstName());
         if (user.getUsername() != null) u.setUsername(user.getUsername());
         if (user.getLastName() != null) u.setLastName(user.getLastName());
-        if (!user.getUserType().equals(UserTypeEnum.ROLE_CUSTOMER) || !user.getUserType().equals(UserTypeEnum.ROLE_EMPLOYEE))
+        if (user.getUserType() != UserTypeEnum.ROLE_CUSTOMER && user.getUserType() !=UserTypeEnum.ROLE_EMPLOYEE)
         {
             throw new IncorrectUserTypeException(" Your enter user Role is not Valid");
         }
