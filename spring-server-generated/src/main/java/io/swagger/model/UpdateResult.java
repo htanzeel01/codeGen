@@ -2,27 +2,26 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
+
 import javax.validation.constraints.*;
 
 /**
- * Update
+ * UpdateResult
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-27T13:17:09.505Z[GMT]")
 
 
-public class Update   {
+public class UpdateResult {
   @JsonProperty("Success")
   private Boolean success = null;
 
   @JsonProperty("Message")
   private String message = null;
 
-  public Update success(Boolean success) {
+  public UpdateResult success(Boolean success) {
     this.success = success;
     return this;
   }
@@ -42,7 +41,7 @@ public class Update   {
     this.success = success;
   }
 
-  public Update message(String message) {
+  public UpdateResult message(String message) {
     this.message = message;
     return this;
   }
@@ -70,9 +69,9 @@ public class Update   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Update update = (Update) o;
-    return Objects.equals(this.success, update.success) &&
-        Objects.equals(this.message, update.message);
+    UpdateResult updateResult = (UpdateResult) o;
+    return Objects.equals(this.success, updateResult.success) &&
+        Objects.equals(this.message, updateResult.message);
   }
 
   @Override
@@ -83,7 +82,7 @@ public class Update   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Update {\n");
+    sb.append("class UpdateResult {\n");
     
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");

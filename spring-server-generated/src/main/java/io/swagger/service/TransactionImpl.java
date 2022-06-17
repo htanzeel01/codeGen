@@ -1,7 +1,7 @@
 package io.swagger.service;
 
 import io.swagger.model.Account;
-import io.swagger.model.Transactions;
+import io.swagger.model.Transaction;
 import io.swagger.repository.TransactionRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 @Log
@@ -21,55 +20,55 @@ public class TransactionImpl implements TransactionService {
     @Autowired
     AccountService accountService;
 
-    public boolean CheckTransactionDayLimit(Transactions transactions) throws Exception {
+    public boolean CheckTransactionDayLimit(Transaction transaction) throws Exception {
         BigDecimal sum = BigDecimal.ZERO;
-        if(transactions == null){
+        if(transaction == null){
             throw new Exception("Transaction is empty");
         }
-        List<Transactions> transactionsList = getAllTransactions(transactions.getAccountfrom().getIban());
-        for (Transactions t: transactionsList
+        List<Transaction> transactionList = getAllTransactions(transaction.getAccountfrom().getIban());
+        for (Transaction t: transactionList
              ) {
             sum.add(t.getAmount());
         }
-        if (sum.compareTo(transactions.getDayLimit())>0){
-            transactionRepository.UpdateDayLimit(transactions.getDayLimit().subtract(sum), transactions.getAccountfrom().getIban());
+        if (sum.compareTo(transaction.getDayLimit())>0){
+            transactionRepository.UpdateDayLimit(transaction.getDayLimit().subtract(sum), transaction.getAccountfrom().getIban());
             return false;
         }
-        transactionRepository.UpdateDayLimit(transactions.getDayLimit().subtract(sum), transactions.getAccountfrom().getIban());
+        transactionRepository.UpdateDayLimit(transaction.getDayLimit().subtract(sum), transaction.getAccountfrom().getIban());
         return true;
     }
 
     @Transactional
     @Override
-    public Transactions createTransaction(Transactions transactions) throws Exception {
-        transactions.setAccountfrom(accountService.getbyIban(transactions.getAccountfrom().getIban()));
-        if (transactions.getAmount().compareTo(BigDecimal.valueOf(7000)) > 0) {
+    public Transaction createTransaction(Transaction transaction) throws Exception {
+        transaction.setAccountfrom(accountService.getbyIban(transaction.getAccountfrom().getIban()));
+        if (transaction.getAmount().compareTo(BigDecimal.valueOf(7000)) > 0) {
             throw new Exception("Amount cannot be more than transaction limit of 7000");
         }
-        if (accountService.getbyIban(transactions.getAccountto()) == null) {
+        if (accountService.getbyIban(transaction.getAccountto()) == null) {
             return null;
         }
-        if (transactions.getAccountfrom().getAccountType() == Account.AccountTypeEnum.SAVINGS) {
-            if (!accountService.accountCheck(transactions.getAccountfrom().getIban(), transactions.getAccountto())) {
+        if (transaction.getAccountfrom().getAccountType() == Account.AccountTypeEnum.SAVINGS) {
+            if (!accountService.accountCheck(transaction.getAccountfrom().getIban(), transaction.getAccountto())) {
                 throw new Exception("Savings account can only transfer to one of your accounts");
             }
         }
-        transactionRepository.save(transactions);
-        accountService.updateAmount(transactions.getAccountfrom().getIban(), transactions.getAmount());
-        accountService.increaseAmount(transactions.getAccountto(), transactions.getAmount());
-        return transactions;
+        transactionRepository.save(transaction);
+        accountService.updateAmount(transaction.getAccountfrom().getIban(), transaction.getAmount());
+        accountService.increaseAmount(transaction.getAccountto(), transaction.getAmount());
+        return transaction;
     }
 
     @Override
-    public Transactions WithdrawDeposit(Transactions transactions) {
-        return transactionRepository.save(transactions);
+    public Transaction WithdrawDeposit(Transaction transaction) {
+        return transactionRepository.save(transaction);
     }
 
     @Override
-    public Transactions getTransactionsById(Integer transactionId) throws Exception {
-            Transactions transactions = transactionRepository.findTransactionsById(transactionId);
-            if(transactions!=null){
-                return transactions;
+    public Transaction getTransactionsById(Integer transactionId) throws Exception {
+            Transaction transaction = transactionRepository.findTransactionsById(transactionId);
+            if(transaction !=null){
+                return transaction;
             }
             else {
                 throw new Exception("Transations can not be found");
@@ -77,10 +76,10 @@ public class TransactionImpl implements TransactionService {
     }
 
     @Override
-    public List<Transactions> getAllTransactions(String iban) {
-        List<Transactions> transactionsList = transactionRepository.findAll();
-        List<Transactions> returnTransactions = new ArrayList<>();
-        for(Transactions t: transactionsList
+    public List<Transaction> getAllTransactions(String iban) {
+        List<Transaction> transactionList = transactionRepository.findAll();
+        List<Transaction> returnTransactions = new ArrayList<>();
+        for(Transaction t: transactionList
         ) {
             if (t.getAccountto().contains(iban)){
                 returnTransactions.add(t);

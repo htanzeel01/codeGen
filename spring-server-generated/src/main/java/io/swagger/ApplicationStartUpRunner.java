@@ -61,6 +61,7 @@ public class ApplicationStartUpRunner implements ApplicationRunner {
         userToCreateRepository.saveAll(userList);
         firstAccount = new Account(firstUser.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
         firstAccount.setUser(firstUser);
+        firstAccount.setIban("NL55INHO0171");
         secondAccount = new Account(secondUser.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
         secondAccount.setUser(secondUser);
         accounts.add(firstAccount);

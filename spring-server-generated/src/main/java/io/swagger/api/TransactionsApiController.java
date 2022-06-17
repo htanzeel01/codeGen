@@ -1,7 +1,7 @@
 package io.swagger.api;
 
 import io.swagger.model.TransactionResult;
-import io.swagger.model.Transactions;
+import io.swagger.model.Transaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.TransactionService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,48 +42,48 @@ public class TransactionsApiController implements TransactionsApi {
         this.request = request;
     }
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<Transactions> getTransaction(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("ID") Integer ID) {
+    public ResponseEntity<Transaction> getTransaction(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("ID") Integer ID) {
 
         try {
-            Transactions transactions = transactionService.getTransactionsById(ID);
-            return new ResponseEntity<Transactions>(transactions, HttpStatus.OK);
+            Transaction transaction = transactionService.getTransactionsById(ID);
+            return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<Transactions>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Transaction>(HttpStatus.BAD_REQUEST);
 
         }
     }
-    /*public ResponseEntity<List<Transactions>> getTransactions(@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "Enter the users ID" ,schema=@Schema()) @Valid @RequestParam(value = "UserID", required = false) String userID,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = false) String startDate,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = false) String endDate) {
+    /*public ResponseEntity<List<Transaction>> getTransactions(@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "Enter the users ID" ,schema=@Schema()) @Valid @RequestParam(value = "UserID", required = false) String userID,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = false) String startDate,@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = false) String endDate) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<List<Transactions>>(objectMapper.readValue("[ {\n  \"amount\" : 25.8,\n  \"userPerforming\" : \"54N45GHS\",\n  \"from\" : \"IBAN5555\",\n  \"id\" : 12345,\n  \"to\" : \"IBAN6666\",\n  \"transactionDate\" : \"15-05-2021\"\n}, {\n  \"amount\" : 25.8,\n  \"userPerforming\" : \"54N45GHS\",\n  \"from\" : \"IBAN5555\",\n  \"id\" : 12345,\n  \"to\" : \"IBAN6666\",\n  \"transactionDate\" : \"15-05-2021\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<List<Transaction>>(objectMapper.readValue("[ {\n  \"amount\" : 25.8,\n  \"userPerforming\" : \"54N45GHS\",\n  \"from\" : \"IBAN5555\",\n  \"id\" : 12345,\n  \"to\" : \"IBAN6666\",\n  \"transactionDate\" : \"15-05-2021\"\n}, {\n  \"amount\" : 25.8,\n  \"userPerforming\" : \"54N45GHS\",\n  \"from\" : \"IBAN5555\",\n  \"id\" : 12345,\n  \"to\" : \"IBAN6666\",\n  \"transactionDate\" : \"15-05-2021\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<Transactions>>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<List<Transaction>>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
-        return new ResponseEntity<List<Transactions>>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<List<Transaction>>(HttpStatus.NOT_IMPLEMENTED);
     }*/
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<List<Transactions>> getTransactionsFromAccountId(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "iban", required = true) String iban) {
+    public ResponseEntity<List<Transaction>> getTransactionsFromAccountId(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "iban", required = true) String iban) {
 
         try {
             if (iban == null){
                 throw new Exception("iban is null");
             }
-            List<Transactions> transactions =transactionService.getAllTransactions(iban);
-            return new ResponseEntity<List<Transactions>>(transactions, HttpStatus.OK);
+            List<Transaction> transactions =transactionService.getAllTransactions(iban);
+            return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
 
         }
           catch (Exception e) {
-              return new ResponseEntity<List<Transactions>>(HttpStatus.BAD_GATEWAY);
+              return new ResponseEntity<List<Transaction>>(HttpStatus.BAD_GATEWAY);
 
           }
     }
 
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
-    public ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Transactions body) throws Exception {
+    public ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Transaction body) throws Exception {
         try {
             body.setTransactionDate(LocalDateTime.now());
             body.setUserperforming(body.getAccountfrom().getUser().getUserType());

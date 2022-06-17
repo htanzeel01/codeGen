@@ -1,5 +1,6 @@
 package io.swagger.service;
 
+import io.swagger.exception.IncorrectUserTypeException;
 import io.swagger.exception.RegistrationInvalidException;
 import io.swagger.exception.UserNotFoundException;
 import io.swagger.model.DTO.RegistrationDTO;
@@ -61,7 +62,7 @@ public class UserImplementation implements UserService {
         User user = userToCreateRepository.findUserByUsername(username);
         List<UserTypeEnum>enums=new ArrayList<>();
         enums.add(user.getUserType());
-        if(user !=null){
+        if(user != null){
         return jwtTokenProvider.createToken(username,enums);
         }else {
             throw new Exception("User name or password is wrong");
@@ -84,14 +85,21 @@ public class UserImplementation implements UserService {
 
     }
     @Override
-    public void updateUser(Integer id, User user){
+    public void updateUser(Integer id, User user) throws UserNotFoundException, IncorrectUserTypeException {
         User u = userToCreateRepository.findUserByUserId(id);
-        u.setEmail(user.getEmail());
-        u.setFirstName(user.getFirstName());
-        u.setUsername(user.getUsername());
-        u.setLastName(user.getLastName());
-        u.setUserType(user.getUserType());
-        u.setPassword(user.getPassword());
+        if (u == null) {
+            throw new UserNotFoundException(" not find an user with the given user ID.");
+        }
+        if (user.getEmail() != null) u.setEmail(user.getEmail());
+        if (user.getFirstName() != null) u.setFirstName(user.getFirstName());
+        if (user.getUsername() != null) u.setUsername(user.getUsername());
+        if (user.getLastName() != null) u.setLastName(user.getLastName());
+        if (!user.getUserType().equals(UserTypeEnum.ROLE_CUSTOMER) || !user.getUserType().equals(UserTypeEnum.ROLE_EMPLOYEE))
+        {
+            throw new IncorrectUserTypeException(" Your enter user Role is not Valid");
+        }
+        if (user.getUserType() != null) u.setUserType(user.getUserType());
+        if (user.getPassword() != null) u.setPassword(user.getPassword());
         userToCreateRepository.save(u);
     }
     public User getLoggedInUser() {

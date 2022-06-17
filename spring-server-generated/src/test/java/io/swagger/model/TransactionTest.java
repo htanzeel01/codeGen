@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TransactionTest {
-    private Transactions transactions;
+    private Transaction transaction;
     private Account account;
     private User user;
 
@@ -24,23 +24,23 @@ public class TransactionTest {
         account.setIban("NL55435435435435");
         account.setUser(user);
 
-        transactions = new Transactions();
-        transactions.setAccountfrom(account);
-        transactions.setAccountto(transactions.getAccountto());
-        transactions.setAmount(new BigDecimal(20.00));
-        transactions.setTransactionDate(LocalDateTime.now());
-        transactions.setUserperforming(UserTypeEnum.ROLE_EMPLOYEE);
+        transaction = new Transaction();
+        transaction.setAccountfrom(account);
+        transaction.setAccountto(transaction.getAccountto());
+        transaction.setAmount(new BigDecimal(20.00));
+        transaction.setTransactionDate(LocalDateTime.now());
+        transaction.setUserperforming(UserTypeEnum.ROLE_EMPLOYEE);
     }
 
     @Test
     public void createTransactionShouldNotBeNull() {
-        assertNotNull(transactions);
+        assertNotNull(transaction);
     }
 
     @Test
     public void setNegativeAmountShouldThrowError() {
         Assertions.assertThrows(ResponseStatusException.class, () -> {
-            transactions.setAmount(BigDecimal.valueOf(-500));
+            transaction.setAmount(BigDecimal.valueOf(-500));
         });
     }
 }

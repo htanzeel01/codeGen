@@ -15,13 +15,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Transactions
+ * Transaction
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-27T13:17:09.505Z[GMT]")
 
 @Entity
-public class Transactions   {
+public class Transaction {
   @Id
   @GeneratedValue
   @JsonProperty("id")
@@ -67,7 +67,7 @@ public class Transactions   {
     this.userperforming = userperforming;
   }
 
-  public Transactions id(Integer id) {
+  public Transaction id(Integer id) {
     this.id = id;
     return this;
   }
@@ -87,7 +87,7 @@ public class Transactions   {
     this.id = id;
   }
 
-  public Transactions from(Account from) {
+  public Transaction from(Account from) {
     this.accountfrom = from;
     return this;
   }
@@ -106,7 +106,7 @@ public class Transactions   {
     this.accountfrom = from;
   }
 
-  public Transactions to(String to) {
+  public Transaction to(String to) {
     this.accountto = to;
     return this;
   }
@@ -126,7 +126,7 @@ public class Transactions   {
     this.accountto = to;
   }
 
-  public Transactions amount(BigDecimal amount) {
+  public Transaction amount(BigDecimal amount) {
     this.amount = amount;
     return this;
   }
@@ -160,7 +160,7 @@ public class Transactions   {
       @NotNull
 
 
-  public Transactions transactionDate(LocalDateTime transactionDate) {
+  public Transaction transactionDate(LocalDateTime transactionDate) {
     this.transactionDate = transactionDate;
     return this;
   }
@@ -189,13 +189,13 @@ public class Transactions   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Transactions transactions = (Transactions) o;
-    return Objects.equals(this.id, transactions.id) &&
-        Objects.equals(this.accountfrom, transactions.accountfrom) &&
-        Objects.equals(this.accountto, transactions.accountto) &&
-        Objects.equals(this.amount, transactions.amount) &&
-            Objects.equals(this.userperforming, transactions.userperforming) &&
-        Objects.equals(this.transactionDate, transactions.transactionDate);
+    Transaction transaction = (Transaction) o;
+    return Objects.equals(this.id, transaction.id) &&
+        Objects.equals(this.accountfrom, transaction.accountfrom) &&
+        Objects.equals(this.accountto, transaction.accountto) &&
+        Objects.equals(this.amount, transaction.amount) &&
+            Objects.equals(this.userperforming, transaction.userperforming) &&
+        Objects.equals(this.transactionDate, transaction.transactionDate);
   }
 
   @Override
@@ -206,7 +206,7 @@ public class Transactions   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Transactions {\n");
+    sb.append("class Transaction {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    from: ").append(toIndentedString(accountfrom)).append("\n");

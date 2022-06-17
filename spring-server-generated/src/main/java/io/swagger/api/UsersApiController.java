@@ -1,7 +1,5 @@
 package io.swagger.api;
 
-import io.swagger.exception.UnAuthorizedException;
-import io.swagger.exception.UserNotFoundException;
 import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.AccountService;
@@ -9,15 +7,12 @@ import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,7 +63,7 @@ public class UsersApiController implements UsersApi {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, " you are not authorized to access this url ");
             }
             else {
-            throw new UserNotFoundException("User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
     }
@@ -89,13 +84,15 @@ public class UsersApiController implements UsersApi {
     }
 
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<Void> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId,@Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody User body) {
+    public ResponseEntity<UpdateResult> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId, @Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody User body) {
+        UpdateResult updateResult = new UpdateResult();
         try {
-            userService.updateUser(userId,body);
-            return new ResponseEntity<Void>(HttpStatus.OK);
-
+            updateResult.setMessage("you successfully updated your details");
+            userService.updateUser(userId, body);
+            return new ResponseEntity<UpdateResult>(updateResult, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+            updateResult.setMessage(e.getMessage());
+            return new ResponseEntity<UpdateResult>(updateResult, HttpStatus.NOT_FOUND);
         }
     }
 

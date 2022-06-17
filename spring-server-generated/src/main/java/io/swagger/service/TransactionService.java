@@ -1,15 +1,15 @@
 package io.swagger.service;
 
-import io.swagger.model.Transactions;
+import io.swagger.model.Transaction;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public interface TransactionService {
 
-     Transactions createTransaction(Transactions transactions) throws Exception;
-     Transactions WithdrawDeposit(Transactions transactions);
-     Transactions getTransactionsById(Integer transactionId) throws Exception;
-    //public List<Transactions> getTransactionsByAccountID(String accountto) throws Exception;
-     List<Transactions> getAllTransactions(String iban) throws Exception;
+     Transaction createTransaction(Transaction transaction) throws Exception;
+     Transaction WithdrawDeposit(Transaction transaction);
+     Transaction getTransactionsById(Integer transactionId) throws Exception;
+    //public List<Transaction> getTransactionsByAccountID(String accountto) throws Exception;
+     List<Transaction> getAllTransactions(String iban) throws Exception;
 }

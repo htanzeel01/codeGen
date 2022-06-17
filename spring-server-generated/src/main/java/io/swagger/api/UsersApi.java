@@ -75,7 +75,7 @@ public interface UsersApi {
 , defaultValue="50")) @Valid @RequestParam(value = "limit", required = false, defaultValue="50") Integer limit);
 
 
-    @Operation(summary = "Update User", description = "Update the User based on the userId.", security = {
+    @Operation(summary = "UpdateResult User", description = "UpdateResult the User based on the userId.", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Invalid"),
@@ -84,7 +84,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{userId}",
             consumes = { "application/json" },
             method = RequestMethod.PUT)
-    ResponseEntity<Void> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId, @Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody User body);
+    ResponseEntity<UpdateResult> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId, @Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody User body);
 
 }
 

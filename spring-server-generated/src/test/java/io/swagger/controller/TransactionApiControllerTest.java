@@ -2,7 +2,7 @@ package io.swagger.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.Account;
-import io.swagger.model.Transactions;
+import io.swagger.model.Transaction;
 import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
 import io.swagger.service.TransactionImpl;
@@ -27,12 +27,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser(username="admin",roles={"CUSTOMER","EMPLOYEE"})
-class TransactionsApiControllerTest {
+class TransactionApiControllerTest {
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private Transactions transactions;
+    private Transaction transaction;
     private TransactionImpl transactionimp;
     private Account account;
     private User user;
@@ -44,27 +44,27 @@ class TransactionsApiControllerTest {
         account.setIban("NL55435435435435");
         account.setUser(user);
 
-        transactions = new Transactions();
-        transactions.setAccountfrom(account);
-        transactions.setAccountto("NL23INHO123456789");
-        transactions.setAmount(new BigDecimal(20.00));
-        transactions.setTransactionDate(LocalDateTime.now());
-        transactions.setUserperforming(account.getUser().getUserType());
-        transactions.setId(1);
+        transaction = new Transaction();
+        transaction.setAccountfrom(account);
+        transaction.setAccountto("NL23INHO123456789");
+        transaction.setAmount(new BigDecimal(20.00));
+        transaction.setTransactionDate(LocalDateTime.now());
+        transaction.setUserperforming(account.getUser().getUserType());
+        transaction.setId(1);
     }
     @Test
     public void postingCreateTransactionReturnsOk() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         this.mvc
                 .perform(
-                        post("/transactions")
+                        post("/transaction")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(mapper.writeValueAsString(transactions)))
+                                .content(mapper.writeValueAsString(transaction)))
                 .andExpect(status().isOk());
     }
     @Test
     public void getTransactionbyIdReturnsOk() throws Exception {
-        when(transactionimp.getTransactionsById(transactions.getId())).thenReturn(transactions);
+        when(transactionimp.getTransactionsById(transaction.getId())).thenReturn(transaction);
         assertThat("test passed");
     }
 }

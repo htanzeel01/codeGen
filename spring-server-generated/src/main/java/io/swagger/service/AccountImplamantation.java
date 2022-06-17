@@ -2,9 +2,8 @@ package io.swagger.service;
 
 import io.swagger.exception.IncorrectAccountException;
 import io.swagger.model.Account;
-import io.swagger.model.Transactions;
+import io.swagger.model.Transaction;
 import io.swagger.model.User;
-import io.swagger.model.UserTypeEnum;
 import io.swagger.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,13 +89,13 @@ public class AccountImplamantation implements AccountService{
             throw new Exception("Account must be of type current");
         }
         else if (account != null) {
-            Transactions transactions = new Transactions();
-            transactions.setAccountfrom(account);
-            transactions.setAmount(new BigDecimal(amount));
-            transactions.setTransactionDate(LocalDateTime.now());
-            transactions.setUserperforming(account.getUser().getUserType());
-            transactions.setAccountto("Deposit");
-            transactionService.WithdrawDeposit(transactions);
+            Transaction transaction = new Transaction();
+            transaction.setAccountfrom(account);
+            transaction.setAmount(new BigDecimal(amount));
+            transaction.setTransactionDate(LocalDateTime.now());
+            transaction.setUserperforming(account.getUser().getUserType());
+            transaction.setAccountto("Deposit");
+            transactionService.WithdrawDeposit(transaction);
             return accountRepository.updateBalance(newamount, account.getIban());
         }
         else {
@@ -116,13 +115,13 @@ public class AccountImplamantation implements AccountService{
         }
         else if(account!= null){
             accountRepository.updateBalance(withdrawAmount,account.getIban());
-            Transactions transactions = new Transactions();
-            transactions.setAccountfrom(account);
-            transactions.setAmount(new BigDecimal(amount));
-            transactions.setTransactionDate(LocalDateTime.now());
-            transactions.setUserperforming(account.getUser().getUserType());
-            transactions.setAccountto("Withdraw");
-            transactionService.WithdrawDeposit(transactions);
+            Transaction transaction = new Transaction();
+            transaction.setAccountfrom(account);
+            transaction.setAmount(new BigDecimal(amount));
+            transaction.setTransactionDate(LocalDateTime.now());
+            transaction.setUserperforming(account.getUser().getUserType());
+            transaction.setAccountto("Withdraw");
+            transactionService.WithdrawDeposit(transaction);
             return getbyIban(iban);
         }
         else {

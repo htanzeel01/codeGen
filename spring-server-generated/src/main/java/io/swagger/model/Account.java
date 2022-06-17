@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class Account {
   private User user;
 
   @OneToMany(mappedBy = "accountfrom",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
-  private Set<Transactions> transactions;
+  private Set<Transaction> transactions;
 
   @Schema(hidden = true)
 
