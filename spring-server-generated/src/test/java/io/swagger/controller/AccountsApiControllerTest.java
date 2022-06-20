@@ -64,7 +64,7 @@ class AccountsApiControllerTest {
     }
     @Test
     public void getUserAccountbyUserIDShouldReturnOK() throws Exception {
-        when(accountImplamantation.getAllByUser(1)).thenReturn(accountList);
+        when(accountImplamantation.getAllUserByUserId(1)).thenReturn(accountList);
         assertThat("Test passed");
     }
     @Test

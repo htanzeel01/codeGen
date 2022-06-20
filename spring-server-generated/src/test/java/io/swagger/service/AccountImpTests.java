@@ -67,7 +67,7 @@ public class AccountImpTests {
     public void getAccounts() throws Exception {
         accountService.save(testAccount);
         when(accountRepository.findAll()).thenReturn(accountList);
-        List<Account> accountList1 = accountService.getAllByUser(testAccount.getUser().getUserId());
+        List<Account> accountList1 = accountService.getAllUserByUserId(testAccount.getUser().getUserId());
         assertEquals(accountList1, accountList);
     }
 

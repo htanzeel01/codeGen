@@ -1,5 +1,7 @@
 package io.swagger.api;
 
+import io.swagger.exception.AccountNotFoundException;
+import io.swagger.exception.UnAuthorizedException;
 import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.AccountService;
@@ -7,6 +9,7 @@ import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +47,30 @@ public class UsersApiController implements UsersApi {
         this.objectMapper = objectMapper;
         this.request = request;
     }
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    //@PreAuthorize("hasRole('EMPLOYEE')")
+    @SneakyThrows
     public ResponseEntity<List<Account>> getUserAccount(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) {
-        try {
-            return new ResponseEntity<List<Account>>(accountService.getAllByUser(userId), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<List<Account>>(HttpStatus.BAD_REQUEST);
+        if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
+            return new ResponseEntity<List<Account>>(accountService.getAllUserByUserId(userId), HttpStatus.OK);
+        }
+        else if(userService.getLoggedInUser().getUserType() != UserTypeEnum.ROLE_EMPLOYEE){
+            throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to access this url");
+        }
+        else {
+            throw new AccountNotFoundException(HttpStatus.NOT_FOUND,"Account can not be found");
         }
     }
 
     //@PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<User> getUserByID(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) throws Exception {
-            if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
-                User user = userService.getUserByUserId(userId);
-                return new ResponseEntity<User>(user, HttpStatus.OK);
-            }
-            else if(userService.getLoggedInUser().getUserType() != UserTypeEnum.ROLE_EMPLOYEE){
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, " you are not authorized to access this url ");
-            }
-            else {
+        if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
+            User user = userService.getUserByUserId(userId);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
+        }
+        else if(userService.getLoggedInUser().getUserType() != UserTypeEnum.ROLE_EMPLOYEE){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, " you are not authorized to access this url ");
+        }
+        else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
@@ -87,13 +95,17 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<UpdateResult> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId, @Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody User body) {
         UpdateResult updateResult = new UpdateResult();
         try {
-            updateResult.setMessage("you successfully updated your details");
-            userService.updateUser(userId, body);
-            return new ResponseEntity<UpdateResult>(updateResult, HttpStatus.OK);
-        }catch (Exception e){
+            if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
+                updateResult.setMessage("you successfully updated your details");
+                userService.updateUser(userId, body);
+                return new ResponseEntity<UpdateResult>(updateResult, HttpStatus.OK);
+            }
+            else {
+                throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to update the user data");
+            }
+        } catch (Exception e) {
             updateResult.setMessage(e.getMessage());
-            return new ResponseEntity<UpdateResult>(updateResult, HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<UpdateResult>(updateResult, HttpStatus.NOT_FOUND);
     }
-
 }

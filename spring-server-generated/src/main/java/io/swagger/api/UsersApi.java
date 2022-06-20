@@ -40,7 +40,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{userId}/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Account>> getUserAccount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId);
+    ResponseEntity<List<Account>> getUserAccount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId) throws Exception;
 
 
     @Operation(summary = "geting  a user", description = "Get a specific user with the userId", security = {

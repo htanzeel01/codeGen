@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 @Service
 public interface AccountService {
-    List<Account> getAllByUser(Integer userId) throws Exception;
+    List<Account> getAllUserByUserId(Integer userId);
     void save(Account account) throws Exception;
     List<Account> GetAccountbyName(String name);
     String ibanFormat();

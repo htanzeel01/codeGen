@@ -1,11 +1,13 @@
 package io.swagger.service;
 
+import io.swagger.exception.AccountNotFoundException;
 import io.swagger.exception.IncorrectAccountException;
 import io.swagger.model.Account;
 import io.swagger.model.Transaction;
 import io.swagger.model.User;
 import io.swagger.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -130,12 +132,13 @@ public class AccountImplamantation implements AccountService{
     }
 
     @Override
-    public List<Account> getAllByUser(Integer userId) throws Exception {
+    public List<Account> getAllUserByUserId(Integer userId) {
         List<Account> accounts =accountRepository.getAllByUserid(userId);
-        if(accounts!=null){
+        if(accounts != null){
         return accounts;
-        }else{
-            throw new Exception("Accounts can not be retrieved");
+        }
+        else{
+            throw new AccountNotFoundException(HttpStatus.NOT_FOUND, "Account is not found");
         }
     }
     @Override
