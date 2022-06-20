@@ -4,7 +4,7 @@ import io.swagger.Swagger2SpringBoot;
 import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
-import io.swagger.repository.UserToCreateRepository;
+import io.swagger.repository.UserRepository;
 import io.swagger.security.JwtTokenProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
@@ -26,7 +26,7 @@ import java.util.List;
 @SpringBootTest(classes = Swagger2SpringBoot.class)
 public class UserImpTests {
     @Mock
-    private UserToCreateRepository userToCreateRepository;
+    private UserRepository userRepository;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     private AuthenticationManager authenticationManager;
@@ -60,28 +60,28 @@ public class UserImpTests {
     @Test
     public void createAnUser() throws Exception {
         User user = userService.createUser(registrationDTO);
-        assertEquals(userToCreateRepository.save(user), user);
+        assertEquals(userRepository.save(user), user);
     }
 
     @Test
     void getALLUsers() {
-        when(userToCreateRepository.findAll()).thenReturn(userList);
+        when(userRepository.findAll()).thenReturn(userList);
         List<User> users = userService.getALLUsers();
         assertEquals(users, userList);
     }
 
     @Test
     void getUsersByUserName() {
-        userToCreateRepository.save(user);
-        when(userToCreateRepository.findUserByUsername("mah")).thenReturn(user);
+        userRepository.save(user);
+        when(userRepository.findUserByUsername("mah")).thenReturn(user);
         User user = userService.getAllUsersByUserName("mah");
         assertEquals(user, this.user);
     }
 
     @Test
     void getUserByUserId() throws Exception {
-        userToCreateRepository.save(user);
-        when(userToCreateRepository.findUserByUserId(2)).thenReturn(user);
+        userRepository.save(user);
+        when(userRepository.findUserByUserId(2)).thenReturn(user);
         User user = userService.getUserByUserId(2);
         assertEquals(user, this.user);
     }

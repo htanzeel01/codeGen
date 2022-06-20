@@ -4,7 +4,7 @@ import io.swagger.model.Account;
 import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
-import io.swagger.repository.UserToCreateRepository;
+import io.swagger.repository.UserRepository;
 import io.swagger.security.JwtTokenProvider;
 import io.swagger.service.AccountService;
 import io.swagger.service.UserImplementation;
@@ -26,7 +26,7 @@ import java.util.List;
 @Transactional
 public class ApplicationStartUpRunner implements ApplicationRunner {
     @Autowired
-    private UserToCreateRepository userToCreateRepository;
+    private UserRepository userRepository;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
@@ -60,7 +60,7 @@ public class ApplicationStartUpRunner implements ApplicationRunner {
         secondUser.setPassword(passwordEncoder.encode(secondUser.getPassword()));
         userList.add(firstUser);
         userList.add(secondUser);
-        userToCreateRepository.saveAll(userList);
+        userRepository.saveAll(userList);
         firstAccount = new Account(firstUser.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
         firstAccount.setUser(firstUser);
         firstAccount.setIban("NL55INHO0171");

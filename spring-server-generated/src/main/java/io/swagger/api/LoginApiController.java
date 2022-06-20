@@ -1,5 +1,6 @@
 package io.swagger.api;
 
+import io.swagger.exception.LoginException;
 import io.swagger.model.DTO.JwtToken;
 import io.swagger.model.DTO.UserLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,15 +38,15 @@ public class LoginApiController implements LoginApi {
     }
 
     public ResponseEntity<JwtToken> getlogin(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody UserLogin body) throws Exception {
-
-        try {
-            String key = userToCreate.login(body.getUsername(), body.getPassword());
-            JwtToken jwtToken = new JwtToken();
-            jwtToken.setKey(key);
-            return new ResponseEntity<JwtToken>(jwtToken, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<JwtToken>( HttpStatus.BAD_REQUEST);
+        JwtToken jwtToken = new JwtToken();
+        if(body.getUsername() != null && body.getPassword()!= null){
+        String key = userToCreate.login(body.getUsername(), body.getPassword());
+        jwtToken.setKey(key);
         }
+        else {
+            throw new LoginException(HttpStatus.UNPROCESSABLE_ENTITY, "Username or password cannot be empty");
+        }
+        return new ResponseEntity<JwtToken>(jwtToken, HttpStatus.OK);
     }
 
 }

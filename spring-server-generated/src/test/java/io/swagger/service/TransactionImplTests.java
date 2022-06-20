@@ -8,11 +8,10 @@ import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
 import io.swagger.repository.AccountRepository;
 import io.swagger.repository.TransactionRepository;
-import io.swagger.repository.UserToCreateRepository;
+import io.swagger.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.when;
 public class TransactionImplTests {
     @Mock
     @Autowired
-    private UserToCreateRepository userToCreateRepository;
+    private UserRepository userRepository;
     @Autowired
     @Mock
     private AccountRepository accountRepository;
@@ -66,7 +65,7 @@ public class TransactionImplTests {
         secondUser.setUserId(2);
         userList.add(firstUser);
         userList.add(secondUser);
-        userToCreateRepository.saveAll(userList);
+        userRepository.saveAll(userList);
         firstAccount = new Account(firstUser.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
         firstAccount.setUser(firstUser);
         firstAccount.setIban(firstIban);

@@ -1,19 +1,21 @@
 package io.swagger.service;
 
 import io.swagger.exception.IncorrectUserTypeException;
+import io.swagger.exception.LoginException;
 import io.swagger.exception.RegistrationInvalidException;
 import io.swagger.exception.UserNotFoundException;
 import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
-import io.swagger.repository.UserToCreateRepository;
+import io.swagger.repository.UserRepository;
 import io.swagger.security.JwtTokenProvider;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ import java.util.List;
 @Service
 public class UserImplementation implements UserService {
     @Autowired
-    private UserToCreateRepository userToCreateRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -45,7 +47,7 @@ public class UserImplementation implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User registered = null;
         if(checkMail(registrationDTO) && !user.getUsername().isEmpty()){
-            registered = userToCreateRepository.save(user);
+            registered = userRepository.save(user);
             return registered;
         }
         else{
@@ -55,30 +57,38 @@ public class UserImplementation implements UserService {
 
     @Override
     public boolean checkMail(RegistrationDTO registrationDTO) {
-        User userByEmail =userToCreateRepository.getUserByEmail(registrationDTO.getEmail());
+        User userByEmail = userRepository.getUserByEmail(registrationDTO.getEmail());
         if(userByEmail==null){
             return true;
         }
         return false;
     }
-    public String login(String username,String password) throws Exception {
-        User user = userToCreateRepository.findUserByUsername(username);
-        List<UserTypeEnum>enums=new ArrayList<>();
-        enums.add(user.getUserType());
-        if(user != null){
-        return jwtTokenProvider.createToken(username,enums);
-        }else {
-            throw new Exception("User name or password is wrong");
+    public String login(String username,String password) {
+        try {
+            if (password == null || password.length() == 0) {
+                throw new LoginException(HttpStatus.UNPROCESSABLE_ENTITY, "Please enter a password.");
+            }
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            User user = userRepository.findUserByUsername(username);
+            if (user == null) {
+                throw new LoginException(HttpStatus.UNPROCESSABLE_ENTITY, "Could not find an user on this emailaddress.");
+            }
+            List<UserTypeEnum> roles = new ArrayList<>();
+            roles.add(user.getUserType());
+            return jwtTokenProvider.createToken(username, roles);
+        } catch (AuthenticationException ex) {
+            throw new LoginException(HttpStatus.UNAUTHORIZED, ex.getMessage());
         }
+
     }
     public List<User> getALLUsers(){
-        return (List<User>) userToCreateRepository.findAll();
+        return (List<User>) userRepository.findAll();
     }
     public User getAllUsersByUserName(String username){
-        return (User) userToCreateRepository.findUserByUsername(username);
+        return (User) userRepository.findUserByUsername(username);
     }
     public User getUserByUserId(Integer userId) throws UserNotFoundException {
-        User user = userToCreateRepository.findUserByUserId(userId);
+        User user = userRepository.findUserByUserId(userId);
         if(user!=null){
         return user;
         }
@@ -89,7 +99,7 @@ public class UserImplementation implements UserService {
     }
     @Override
     public void updateUser(Integer id, User user) throws UserNotFoundException, IncorrectUserTypeException {
-        User u = userToCreateRepository.findUserByUserId(id);
+        User u = userRepository.findUserByUserId(id);
         if (u == null) {
             throw new UserNotFoundException(" not find an user with the given user ID.");
         }
@@ -103,12 +113,12 @@ public class UserImplementation implements UserService {
         }
         if (user.getUserType() != null) u.setUserType(user.getUserType());
         if (user.getPassword() != null) u.setPassword(passwordEncoder.encode(user.getPassword()));
-        userToCreateRepository.save(u);
+        userRepository.save(u);
     }
     public User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailAddress = authentication.getName();
-        User loggedInUser = userToCreateRepository.findUserByUsername(emailAddress);
+        User loggedInUser = userRepository.findUserByUsername(emailAddress);
         if (loggedInUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No authentication token was given.");
         }

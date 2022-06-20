@@ -3,7 +3,7 @@ package io.swagger.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
-import io.swagger.repository.UserToCreateRepository;
+import io.swagger.repository.UserRepository;
 import io.swagger.service.UserImplementation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class UsersApiControllerTest {
     @MockBean
     private UserImplementation userImplementation;
     private User user;
-    private UserToCreateRepository userToCreateRepository;
+    private UserRepository userRepository;
 
     @BeforeEach
     public void setup() throws Exception {
