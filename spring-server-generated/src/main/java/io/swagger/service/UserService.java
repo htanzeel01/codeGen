@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public interface UserService {
     User createUser(RegistrationDTO registrationDTO) throws Exception;
-    boolean checkMail(RegistrationDTO registrationDTO);
+    boolean checkValidMail(RegistrationDTO registrationDTO);
     String login(String username,String password) throws LoginException;
     List<User> getALLUsers();
     User getAllUsersByUserName(String username);

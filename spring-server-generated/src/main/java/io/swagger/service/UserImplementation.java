@@ -46,7 +46,7 @@ public class UserImplementation implements UserService {
                 registrationDTO.getUsertype());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User registered = null;
-        if(checkMail(registrationDTO) && !user.getUsername().isEmpty()){
+        if(checkValidMail(registrationDTO) && !user.getUsername().isEmpty()){
             registered = userRepository.save(user);
             return registered;
         }
@@ -56,7 +56,7 @@ public class UserImplementation implements UserService {
     }
 
     @Override
-    public boolean checkMail(RegistrationDTO registrationDTO) {
+    public boolean checkValidMail(RegistrationDTO registrationDTO) {
         User userByEmail = userRepository.getUserByEmail(registrationDTO.getEmail());
         if(userByEmail==null){
             return true;

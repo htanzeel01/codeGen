@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import io.swagger.exception.AccountNotFoundException;
 import io.swagger.exception.UnAuthorizedException;
+import io.swagger.exception.UserNotFoundException;
 import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.AccountService;
@@ -73,22 +74,23 @@ public class UsersApiController implements UsersApi {
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-
     }
-    @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
+
     public ResponseEntity<List<User>> getUsers(@Parameter(in = ParameterIn.QUERY, description = "find user by userName" ,schema=@Schema()) @Valid @RequestParam(value = "userName", required = false) String userName, @Min(0)@Parameter(in = ParameterIn.QUERY, description = "number of records to skip for pagination" ,schema=@Schema(allowableValues={  }
 )) @Valid @RequestParam(value = "skip", required = false) Integer skip, @Min(0) @Max(50) @Parameter(in = ParameterIn.QUERY, description = "maximum number of records to return" ,schema=@Schema(allowableValues={  }, maximum="50"
 , defaultValue="50")) @Valid @RequestParam(value = "limit", required = false, defaultValue="50") Integer limit) {
-        if(userName==null){
-            return new ResponseEntity<List<User>>(userService.getALLUsers(),HttpStatus.OK);
-        }
-        else {
-            User user =  userService.getAllUsersByUserName(userName);
+        if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
             List<User> users = new ArrayList<>();
+            if(userName == null){
+                 users = (List<User>) userService.getALLUsers();
+            }
+            User user =  userService.getAllUsersByUserName(userName);
             users.add(user);
             return new ResponseEntity<List<User>>(users,HttpStatus.OK);
         }
-
+        else {
+           throw new UnAuthorizedException(HttpStatus.UNAUTHORIZED, "You are not authorized to access user data");
+        }
     }
 
     @PreAuthorize("hasRole('EMPLOYEE')")
