@@ -1,12 +1,11 @@
 package io.swagger.api;
 
-import io.swagger.model.Account;
-import io.swagger.model.Deposit;
-import io.swagger.model.DepositResult;
-import io.swagger.model.Withdraw;
-import io.swagger.model.Withdrawresult;
+import io.swagger.exception.IncorrectAccountException;
+import io.swagger.exception.UnAuthorizedException;
+import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.AccountService;
+import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -47,6 +46,8 @@ public class AccountsApiController implements AccountsApi {
 
     @Autowired
     AccountService accountService;
+    @Autowired
+    UserService userService;
 
     private static final Logger log = LoggerFactory.getLogger(AccountsApiController.class);
 
@@ -60,15 +61,25 @@ public class AccountsApiController implements AccountsApi {
         this.request = request;
     }
 
-    @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
     public ResponseEntity<DepositResult> accountDeposit(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Deposit body) {
+        Account accountChecker = accountService.getbyIban(iban);
         try {
-            accountService.deposit(iban, body.getDepositAmount());
-            DepositResult result = new DepositResult();
-            result.setSuccess("Balance deposited successfuly");
-            result.setTime(LocalDateTime.now());
-            //result.setCurrentBalance(amount);
-            return new ResponseEntity<DepositResult>(result, HttpStatus.OK);
+            if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE || userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_CUSTOMER) {
+                if (userService.getLoggedInUser().getUserId() == accountChecker.getUser().getUserId()) {
+                    accountService.deposit(iban, body.getDepositAmount());
+                    DepositResult result = new DepositResult();
+                    result.setSuccess("Balance deposited successfuly");
+                    result.setTime(LocalDateTime.now());
+                    //result.setCurrentBalance(amount);
+                    return new ResponseEntity<DepositResult>(result, HttpStatus.OK);
+                }
+                else{
+                    throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to deposit into this account");
+                }
+            }
+            else {
+                throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to deposit into this account");
+            }
         }
         catch (Exception e){
             return ResponseEntity.status((HttpStatus.BAD_GATEWAY)).build();
@@ -79,51 +90,51 @@ public class AccountsApiController implements AccountsApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
     public ResponseEntity<Withdrawresult> accountWithdrawl(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Withdraw body) {
+            Account accountChecker = accountService.getbyIban(iban);
         try {
-            Account account = accountService.withdraw(iban,body.getWithdrawAmount());
-            Withdrawresult withdrawresult = new Withdrawresult();
-            //withdrawresult.setRemainingbalance(account.getBalance());
-            withdrawresult.setSuccess("withdraw success");
-            withdrawresult.setDailyLimit(700);
-            withdrawresult.setTime(LocalDateTime.now());
-            return new ResponseEntity<>(withdrawresult,HttpStatus.ACCEPTED);
+            if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE || userService.getLoggedInUser().getUserType()==UserTypeEnum.ROLE_CUSTOMER) {
+                if (userService.getLoggedInUser().getUserId()==accountChecker.getUser().getUserId()) {
+                    Account account = accountService.withdraw(iban, body.getWithdrawAmount());
+                    Withdrawresult withdrawresult = new Withdrawresult();
+                    //withdrawresult.setRemainingbalance(account.getBalance());
+                    withdrawresult.setSuccess("withdraw success");
+                    //withdrawresult.setDailyLimit(700);
+                    withdrawresult.setTime(LocalDateTime.now());
+                    return new ResponseEntity<>(withdrawresult, HttpStatus.ACCEPTED);
+                }
+                else {
+                    throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to withdraw from this account");
+                }
+            }
+            else {
+                throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to withdraw from this account");
+            }
         }
         catch (Exception e){
             return ResponseEntity.status((HttpStatus.BAD_GATEWAY)).build();
         }
     }
 
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<List<Account>> getAccount(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "name", required = true) String name) {
-        List<Account> accounts = accountService.GetAccountbyName(name);
-        try {
-            return new ResponseEntity<List<Account>>(accounts,HttpStatus.OK);
-        }
-        catch (EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(accounts);
-        }
-
-    }
-
-    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Account> getAccounts(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN) {
-        Account account = accountService.getbyIban(IBAN);
-        try {
-            return new ResponseEntity<Account>(account,HttpStatus.OK);
-        }
-        catch (IllegalStateException e){
-            return new ResponseEntity<Account>(account,HttpStatus.BAD_REQUEST);
-            //throw new IllegalStateException(e.getMessage());
-            //return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
+            Account account = accountService.getbyIban(IBAN);
+            return new ResponseEntity<Account>(account, HttpStatus.OK);
+        } else {
+            throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to close account");
         }
     }
-    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Void> closeAccount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN) {
         try{
-            accountService.closeAccount(IBAN);
-            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE){
+                accountService.closeAccount(IBAN);
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            }
+            else {
+                throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to close account");
+            }
+
         }catch(Exception exception){
 
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);

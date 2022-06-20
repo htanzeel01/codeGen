@@ -13,7 +13,6 @@ import java.util.List;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account,String> {
-    Account getAccountByName(String name);
     @Query( "Select a from Account a where USER_ID=?1")
     List<Account> getAllByUserid(int userId);
 
@@ -22,7 +21,5 @@ public interface AccountRepository extends JpaRepository<Account,String> {
     @Modifying
     @Query("update Account a set balance = ?1 where IBAN = ?2")
     int updateBalance(BigDecimal balance, String iban);
-
-    List<Account> getAllByName(String name);
 
 }

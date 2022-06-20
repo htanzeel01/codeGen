@@ -1,10 +1,13 @@
 package io.swagger.api;
 
 import io.swagger.exception.IncorrectAccountException;
+import io.swagger.exception.UnAuthorizedException;
 import io.swagger.model.Account;
 import io.swagger.model.AccountResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.model.UserTypeEnum;
 import io.swagger.service.AccountService;
+import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,6 +36,8 @@ public class OpenaccountsApiController implements OpenaccountsApi {
 
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private UserService userService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public OpenaccountsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -44,10 +49,15 @@ public class OpenaccountsApiController implements OpenaccountsApi {
     public ResponseEntity<AccountResult> createAccount(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Account account) throws Exception {
         AccountResult result = new AccountResult();
         try {
-            accountService.save(account);
-            result.setMessage("Account Created");
-            result.setIBAN(account.getIban());
-            return new ResponseEntity<AccountResult>(result, HttpStatus.OK);
+            if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE){
+                accountService.save(account);
+                result.setMessage("Account Created");
+                result.setIBAN(account.getIban());
+                return new ResponseEntity<AccountResult>(result, HttpStatus.OK);
+            }
+            else {
+                throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to open an account");
+            }
         }
         catch (IncorrectAccountException e){
             result.setMessage(e.getMessage());

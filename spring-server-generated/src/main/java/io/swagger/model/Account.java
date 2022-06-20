@@ -32,10 +32,6 @@ public class Account {
   @Column(name = "iban", columnDefinition = "VARCHAR(255)")
   private String iban;
 
-  @JsonProperty("name")
-  @Schema(hidden = true)
-  private String name ;
-
   @JsonProperty("balance")
   private BigDecimal balance;
   @ManyToOne(cascade = CascadeType.MERGE)
@@ -67,8 +63,7 @@ public class Account {
   }
 
 
-  public Account(String name, BigDecimal balance, Account.AccountTypeEnum accountType) {
-    this.name = name;
+  public Account(BigDecimal balance, Account.AccountTypeEnum accountType) {
     this.balance = balance;
     this.accountType = accountType;
   }
@@ -109,23 +104,7 @@ public class Account {
   private AccountTypeEnum accountType;
 
   public Account name(String name) {
-    this.name = name;
     return this;
-  }
-
-  /**
-   * Get name
-   * @return name
-   **/
-  @Schema(example = "Mr Joshua", required = true, description = "")
-      @NotNull
-
-    public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public Account balance(BigDecimal balance) {
@@ -181,22 +160,20 @@ public class Account {
       return false;
     }
     Account account = (Account) o;
-    return Objects.equals(this.name, account.name) &&
-        Objects.equals(this.balance, account.balance) &&
+    return Objects.equals(this.balance, account.balance) &&
         Objects.equals(this.accountType, account.accountType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, balance, accountType);
+    return Objects.hash(balance, accountType);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Account {\n");
-    
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+
     sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
     sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
     sb.append("}");

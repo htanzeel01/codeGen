@@ -17,7 +17,6 @@ class AccountTest {
         account = new Account();
         account.setAccountType(Account.AccountTypeEnum.CURRENT);
         account.setBalance(BigDecimal.valueOf(500));
-        account.setName("Mahedi");
         account.setIban("NL");
 
     }

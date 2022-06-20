@@ -9,7 +9,6 @@ import java.util.List;
 public interface AccountService {
     List<Account> getAllUserByUserId(Integer userId);
     void save(Account account) throws Exception;
-    List<Account> GetAccountbyName(String name);
     String ibanFormat();
     boolean ibanCheck(String iban);
     Account getbyIban(String iban);

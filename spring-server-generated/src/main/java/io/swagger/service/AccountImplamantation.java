@@ -34,7 +34,6 @@ public class AccountImplamantation implements AccountService{
         account.setIban(setiban);
         User user = userService.getAllUsersByUserName(account.getUser().getUsername());
         account.setUser(user);
-        account.setName(user.getFirstName());
         if (account.getUser() != null) {
             accountRepository.save(account);
         }
@@ -43,14 +42,6 @@ public class AccountImplamantation implements AccountService{
         }
     }
 
-    @Override
-    public List<Account> GetAccountbyName(String name) {
-        List<Account> accounts = accountRepository.getAllByName(name);
-        if (accounts.isEmpty()){
-            throw new EntityNotFoundException("Wrong Name");
-        }
-        return accounts;
-    }
 
     @Override
     public String ibanFormat() {

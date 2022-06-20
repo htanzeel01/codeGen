@@ -43,7 +43,7 @@ public class AccountImpTests {
         User user = new User("mahedi", "has!", "user@gmail.com", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
         user.setUserId(4);
         testUser = user;
-        testAccount = new Account(testUser.getUsername(), BigDecimal.valueOf(95.53), Account.AccountTypeEnum.CURRENT);
+        testAccount = new Account(BigDecimal.valueOf(95.53), Account.AccountTypeEnum.CURRENT);
         testAccount.setUser(user);
         testAccount.setIban("NL55INHO");
         accountList.add(testAccount);
@@ -58,8 +58,8 @@ public class AccountImpTests {
     @Test
     public void addAccount() throws Exception {
         accountService.save(testAccount);
-        when(accountRepository.getAllByName(testUser.getUsername())).thenReturn(accountList);
-        List<Account> accountList1 = accountService.GetAccountbyName(testUser.getUsername());
+        when(accountRepository.getAllByUserid(testUser.getUserId())).thenReturn(accountList);
+        List<Account> accountList1 = accountService.getAllUserByUserId(testUser.getUserId());
         assertEquals(accountList1, accountList);
     }
 

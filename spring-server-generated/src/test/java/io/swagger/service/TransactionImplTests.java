@@ -66,11 +66,11 @@ public class TransactionImplTests {
         userList.add(firstUser);
         userList.add(secondUser);
         userRepository.saveAll(userList);
-        firstAccount = new Account(firstUser.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
+        firstAccount = new Account(new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
         firstAccount.setUser(firstUser);
         firstAccount.setIban(firstIban);
         firstAccount.setBalance(new BigDecimal(10));
-        secondAccount = new Account(secondUser.getUsername(), new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
+        secondAccount = new Account(new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
         secondAccount.setUser(secondUser);
         secondAccount.setIban(secondIban);
         accounts.add(firstAccount);

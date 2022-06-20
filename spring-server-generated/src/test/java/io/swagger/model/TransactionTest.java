@@ -20,7 +20,7 @@ public class TransactionTest {
     @BeforeEach
     public void setup(){
         user = new User("Erjano","123456","erjano@gmail.com","Erjano","Baku",UserTypeEnum.ROLE_CUSTOMER);
-        account = new Account("Mahedi",new BigDecimal(100), Account.AccountTypeEnum.CURRENT);
+        account = new Account(new BigDecimal(100), Account.AccountTypeEnum.CURRENT);
         account.setIban("NL55435435435435");
         account.setUser(user);
 

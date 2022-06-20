@@ -69,20 +69,6 @@ public interface AccountsApi {
     ResponseEntity<Withdrawresult> accountWithdrawl(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("iban") String iban, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Withdraw body);
 
 
-    @Operation(summary = "It shows accounts type, euro accounts and standard IBAN", description = "Getting the specific account type and info about the account", security = {
-        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Successfull request", content = @Content(schema = @Schema(implementation = Account.class))),
-        
-        @ApiResponse(responseCode = "400", description = "geting the specific user account"),
-        
-        @ApiResponse(responseCode = "401", description = "the request has not been applied because it lacks valid authentication credentials for the target"),
-        
-        @ApiResponse(responseCode = "403", description = "forbidden") })
-    @RequestMapping(value = "/accounts",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<List<Account>> getAccount(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "name", required = true) String name);
 
 
     @Operation(summary = "It shows accounts type, euro accounts and standard IBAN", description = "Getting the specific account type and info about the account", security = {

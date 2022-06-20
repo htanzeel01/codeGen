@@ -39,7 +39,7 @@ class AccountsApiControllerTest {
     @BeforeEach
     public void setup(){
         user = new User("Mahedi","Mahedi1243","mahedi@gmail.com","Mahedi","Mridul",UserTypeEnum.ROLE_CUSTOMER);
-        account = new Account("Mahedi",new BigDecimal(100), Account.AccountTypeEnum.CURRENT);
+        account = new Account(new BigDecimal(100), Account.AccountTypeEnum.CURRENT);
         account.setIban("NL55INHO43543543511");
         account.setUser(user);
         accountList = new ArrayList<>();
