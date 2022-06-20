@@ -40,7 +40,7 @@ public class OpenaccountsApiController implements OpenaccountsApi {
         this.request = request;
     }
 
-    @PreAuthorize("hasRole('CUSTOMER') or hasRole('EMPLOYEE')")
+    //@PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<AccountResult> createAccount(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Account account) throws Exception {
         AccountResult result = new AccountResult();
         try {

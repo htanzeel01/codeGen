@@ -2,7 +2,6 @@ package io.swagger.api;
 
 import io.swagger.exception.AccountNotFoundException;
 import io.swagger.exception.UnAuthorizedException;
-import io.swagger.exception.UserNotFoundException;
 import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.AccountService;
@@ -48,7 +47,7 @@ public class UsersApiController implements UsersApi {
         this.objectMapper = objectMapper;
         this.request = request;
     }
-    //@PreAuthorize("hasRole('EMPLOYEE')")
+
     @SneakyThrows
     public ResponseEntity<List<Account>> getUserAccount(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) {
         if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
@@ -62,7 +61,6 @@ public class UsersApiController implements UsersApi {
         }
     }
 
-    //@PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<User> getUserByID(@Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("userId") Integer userId) throws Exception {
         if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
             User user = userService.getUserByUserId(userId);
@@ -93,7 +91,6 @@ public class UsersApiController implements UsersApi {
         }
     }
 
-    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<UpdateResult> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId, @Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody User body) {
         UpdateResult updateResult = new UpdateResult();
         try {
@@ -101,6 +98,16 @@ public class UsersApiController implements UsersApi {
                 updateResult.setMessage("you successfully updated your details");
                 userService.updateUser(userId, body);
                 return new ResponseEntity<UpdateResult>(updateResult, HttpStatus.OK);
+            }
+            else if(userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_CUSTOMER) {
+                if(userService.getLoggedInUser().getUserId() == userId){
+                    updateResult.setMessage("you successfully updated your details");
+                    userService.updateUser(userId, body);
+                    return new ResponseEntity<UpdateResult>(updateResult, HttpStatus.OK);
+                }
+                else{
+                    throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to update the user data");
+                }
             }
             else {
                 throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to update the user data");

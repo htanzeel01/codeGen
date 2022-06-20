@@ -117,8 +117,8 @@ public class UserImplementation implements UserService {
     }
     public User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String emailAddress = authentication.getName();
-        User loggedInUser = userRepository.findUserByUsername(emailAddress);
+        String userName = authentication.getName();
+        User loggedInUser = userRepository.findUserByUsername(userName);
         if (loggedInUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No authentication token was given.");
         }
