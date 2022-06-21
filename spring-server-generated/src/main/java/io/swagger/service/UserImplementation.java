@@ -124,4 +124,8 @@ public class UserImplementation implements UserService {
         }
         return loggedInUser;
     }
+    @Override
+    public List<User> getAlluserswithoutAccount(){
+        return (List<User>) userRepository.getAllByAccountsFalse();
+    }
 }

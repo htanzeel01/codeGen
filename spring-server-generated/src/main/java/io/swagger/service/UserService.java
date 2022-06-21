@@ -19,4 +19,5 @@ public interface UserService {
     User getUserByUserId(Integer userId) throws Exception;
     void updateUser(Integer id, User user) throws UserNotFoundException, IncorrectUserTypeException;
     User getLoggedInUser();
+    List<User> getAlluserswithoutAccount();
 }

@@ -107,7 +107,8 @@ public class TransactionsApiController implements TransactionsApi {
             if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
                 body.setTransactionDate(LocalDateTime.now());
                 body.setUserperforming(body.getAccountfrom().getUser().getUserType());
-                transactionService.createTransaction(body); 
+                body.setDayLimit();
+                transactionService.createTransaction(body);
                 TransactionResult transactionResult = new TransactionResult();
                 transactionResult.setMessage("You finaly made it!");
                 transactionResult.setSuccess("Successfully transferred the amount");

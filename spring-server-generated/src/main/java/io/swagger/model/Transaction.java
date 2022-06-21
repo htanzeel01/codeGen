@@ -49,14 +49,14 @@ public class Transaction {
 
   @Schema(hidden = true)
   @JsonProperty("DailyLimit")
-  private BigDecimal dayLimit = BigDecimal.valueOf(5000);
+  private BigDecimal dayLimit = null;
 
   public BigDecimal getDayLimit() {
     return dayLimit;
   }
 
-  public void setDayLimit(BigDecimal dayLimit) {
-    this.dayLimit = dayLimit;
+  public void setDayLimit() {
+    this.dayLimit = BigDecimal.valueOf(300);
   }
 
   public UserTypeEnum getUserperforming() {

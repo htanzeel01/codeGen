@@ -141,7 +141,6 @@ public class AccountImplamantation implements AccountService{
         else{
             throw new EntityNotFoundException("Account does not exit");
         }
-
     }
 
     @Override

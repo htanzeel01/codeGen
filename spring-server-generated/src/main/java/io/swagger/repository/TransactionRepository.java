@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction,Integer> {
@@ -23,4 +24,7 @@ public interface TransactionRepository extends JpaRepository<Transaction,Integer
     @Modifying
     @Query("update Transaction set dayLimit = ?1 where accountfrom.iban = ?2")
     int UpdateDayLimit (BigDecimal limit, String iban);
+
+    @Query("SELECT t FROM Transaction AS t WHERE t.accountfrom.iban = ?1")
+    List<Transaction> findAllByAccountfrom_Iban(String iban);
 }

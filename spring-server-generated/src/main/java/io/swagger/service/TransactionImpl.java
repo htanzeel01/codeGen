@@ -1,5 +1,6 @@
 package io.swagger.service;
 
+import io.swagger.exception.UnAuthorizedException;
 import io.swagger.model.Account;
 import io.swagger.model.Transaction;
 import io.swagger.repository.TransactionRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 @Log
@@ -25,16 +27,19 @@ public class TransactionImpl implements TransactionService {
         if(transaction == null){
             throw new Exception("Transaction is empty");
         }
+        sum = sum.add(transaction.getAmount());
         List<Transaction> transactionList = getAllTransactions(transaction.getAccountfrom().getIban());
         for (Transaction t: transactionList
              ) {
-            sum.add(t.getAmount());
+            sum = sum.add(t.getAmount());
         }
-        if (sum.compareTo(transaction.getDayLimit())>0){
-            transactionRepository.UpdateDayLimit(transaction.getDayLimit().subtract(sum), transaction.getAccountfrom().getIban());
+        double sumed = sum.doubleValue();
+        double limit = transaction.getDayLimit().doubleValue();
+        if (sumed > limit){
+            //transactionRepository.UpdateDayLimit(transaction.getDayLimit().subtract(sum), transaction.getAccountfrom().getIban());
             return false;
         }
-        transactionRepository.UpdateDayLimit(transaction.getDayLimit().subtract(sum), transaction.getAccountfrom().getIban());
+        //transactionRepository.UpdateDayLimit(transaction.getDayLimit().subtract(sum), transaction.getAccountfrom().getIban());
         return true;
     }
 
@@ -53,10 +58,15 @@ public class TransactionImpl implements TransactionService {
                 throw new Exception("Savings account can only transfer to one of your accounts");
             }
         }
-        transactionRepository.save(transaction);
-        accountService.updateAmount(transaction.getAccountfrom().getIban(), transaction.getAmount());
-        accountService.increaseAmount(transaction.getAccountto(), transaction.getAmount());
-        return transaction;
+        if (CheckTransactionDayLimit(transaction)) {
+            transactionRepository.save(transaction);
+            accountService.updateAmount(transaction.getAccountfrom().getIban(), transaction.getAmount());
+            accountService.increaseAmount(transaction.getAccountto(), transaction.getAmount());
+            return transaction;
+        }
+        else{
+            throw new Exception("Daily limit crossed");
+        }
     }
 
     @Override
@@ -77,15 +87,15 @@ public class TransactionImpl implements TransactionService {
 
     @Override
     public List<Transaction> getAllTransactions(String iban) {
-        List<Transaction> transactionList = transactionRepository.findAll();
+        List<Transaction> transactionList = (List<Transaction>) transactionRepository.findAllByAccountfrom_Iban(iban);
         List<Transaction> returnTransactions = new ArrayList<>();
         for(Transaction t: transactionList
         ) {
-            if (t.getAccountto().contains(iban)){
+            if (t.getAccountfrom().getIban().contains(iban)){
+                if (t.getTransactionDate().toLocalDate().equals(LocalDate.now()))
                 returnTransactions.add(t);
             }
         }
         return returnTransactions;
     }
-
 }
