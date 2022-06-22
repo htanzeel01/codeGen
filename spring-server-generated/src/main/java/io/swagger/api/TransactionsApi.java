@@ -51,7 +51,6 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    //ResponseEntity<List<Transaction>> getTransactions(@DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "Enter the users ID" ,schema=@Schema()) @Valid @RequestParam(value = "UserID", required = false) String userID, @DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = false) String startDate, @DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = false) String endDate);
 
     ResponseEntity<List<Transaction>> getTransactionsFromAccountId(@NotNull @Parameter(in = ParameterIn.QUERY, description = "" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "iban", required = true) String iban
     );
@@ -66,6 +65,18 @@ public interface TransactionsApi {
             consumes = { "application/json" },
             method = RequestMethod.POST)
     ResponseEntity<TransactionResult> createTransaction(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Transaction body) throws Exception;
+
+    @Operation(summary = "The user will be able to transfer funds", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transaction" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Transactions of some period of time", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TransactionResult.class)))),
+
+            @ApiResponse(responseCode = "400", description = "period of time transactions could not find") })
+    @RequestMapping(value = "/transactions/period",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<List<Transaction>> getCertainDateOfTransactions( @DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = true) String startDate, @DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = true) String endDate);
 
 }
 
