@@ -121,13 +121,19 @@ public class TransactionsApiController implements TransactionsApi {
             }
         }
             catch (Exception e) {
-            return new ResponseEntity<TransactionResult>(HttpStatus.BAD_REQUEST);
+                throw new UnAuthorizedException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 
     @Override
-    public ResponseEntity<List<Transaction>> getCertainDateOfTransactions(@DecimalMin("1") @Valid String startDate, @DecimalMin("1") @Valid String endDate) {
-        return null;
+    public ResponseEntity<List<Transaction>> getCertainDateOfTransactions( @Valid String startDate,  @Valid String endDate) throws Exception {
+        if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE || userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_CUSTOMER){
+            List<Transaction> transactionList = transactionService.getAllTransactionsBetween2Months(startDate,endDate, userService.getLoggedInUser());
+            return new ResponseEntity<List<Transaction>>(transactionList,HttpStatus.OK);
+        }
+        else {
+            throw new UnAuthorizedException(HttpStatus.FORBIDDEN,"Incorrect details");
+        }
     }
 
 

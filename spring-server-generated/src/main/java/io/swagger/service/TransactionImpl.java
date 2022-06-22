@@ -3,6 +3,7 @@ package io.swagger.service;
 import io.swagger.exception.UnAuthorizedException;
 import io.swagger.model.Account;
 import io.swagger.model.Transaction;
+import io.swagger.model.User;
 import io.swagger.repository.TransactionRepository;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 @Log
@@ -97,5 +99,22 @@ public class TransactionImpl implements TransactionService {
             }
         }
         return returnTransactions;
+    }
+
+    @Override
+    public List<Transaction> getAllTransactionsBetween2Months(String month1, String month2, User loggedInUser) throws Exception{
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        LocalDate date1 = LocalDate.parse(month1,formatter);
+        LocalDate date2 = LocalDate.parse(month2,formatter);
+        Account account = accountService.getAccountbyUserId(loggedInUser);
+        List<Transaction> transactionList = transactionRepository.findAllByAccountfrom_Iban(account.getIban());
+        List<Transaction> monthlyTransactions = new ArrayList<>();
+        for (Transaction t: transactionList
+             ) {
+            if (t.getTransactionDate().getMonth().equals(date1.getMonth())&&t.getTransactionDate().getMonth().equals(date2.getMonth())){
+                monthlyTransactions.add(t);
+            }
+        }
+        return monthlyTransactions;
     }
 }

@@ -75,8 +75,8 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions/period",
             produces = { "application/json" },
             consumes = { "application/json" },
-            method = RequestMethod.POST)
-    ResponseEntity<List<Transaction>> getCertainDateOfTransactions( @DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = true) String startDate, @DecimalMin("1")@Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = true) String endDate);
+            method = RequestMethod.GET)
+    ResponseEntity<List<Transaction>> getCertainDateOfTransactions( @Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = true) String startDate, @Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = true) String endDate) throws Exception;
 
 }
 

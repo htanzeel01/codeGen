@@ -1,6 +1,7 @@
 package io.swagger.repository;
 
 import io.swagger.model.Account;
+import io.swagger.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,5 @@ public interface AccountRepository extends JpaRepository<Account,String> {
     @Query("update Account a set balance = ?1 where IBAN = ?2")
     int updateBalance(BigDecimal balance, String iban);
 
+    Account getAccountByUser(User user);
 }

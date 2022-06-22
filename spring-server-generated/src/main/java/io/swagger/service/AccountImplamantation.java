@@ -171,4 +171,8 @@ public class AccountImplamantation implements AccountService{
             return false;
         }
     }
+    @Override
+    public Account getAccountbyUserId(User user){
+        return accountRepository.getAccountByUser(user);
+    }
 }

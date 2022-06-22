@@ -1,6 +1,7 @@
 package io.swagger.service;
 
 import io.swagger.model.Account;
+import io.swagger.model.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,4 +19,5 @@ public interface AccountService {
     int updateAmount(String iban, BigDecimal amount) throws Exception;
     int increaseAmount(String iban,BigDecimal amount);
     boolean accountCheck(String iban1, String iban2);
+    Account getAccountbyUserId(User user);
 }
