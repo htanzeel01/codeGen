@@ -117,4 +117,15 @@ public class UsersApiController implements UsersApi {
         }
         return new ResponseEntity<UpdateResult>(updateResult, HttpStatus.NOT_FOUND);
     }
+
+    @Override
+    public ResponseEntity<List<User>> getUserWithoutAccount() throws Exception {
+        if (userService.getLoggedInUser().getUserType()==UserTypeEnum.ROLE_EMPLOYEE){
+            List<User> usersWithoutAccount = userService.getAllUsersWithoutAccount();
+            return new ResponseEntity<List<User>>(usersWithoutAccount,HttpStatus.OK);
+        }
+        else {
+            throw new UnAuthorizedException(HttpStatus.FORBIDDEN,"You are not authorized");
+        }
+    }
 }

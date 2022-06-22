@@ -85,6 +85,15 @@ public interface UsersApi {
             consumes = { "application/json" },
             method = RequestMethod.PUT)
     ResponseEntity<UpdateResult> updateUserById(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("userId") Integer userId, @Parameter(in = ParameterIn.DEFAULT, description = "Updated user object", required=true, schema=@Schema()) @Valid @RequestBody User body);
+    @Operation(summary = "Get users without accounts", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfull request", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Account.class)))),
 
+            @ApiResponse(responseCode = "400", description = "Account fetching Failed") })
+    @RequestMapping(value = "/users/Noaccounts",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<User>> getUserWithoutAccount() throws Exception;
 }
 

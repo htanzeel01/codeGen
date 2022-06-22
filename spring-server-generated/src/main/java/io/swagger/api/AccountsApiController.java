@@ -121,8 +121,18 @@ public class AccountsApiController implements AccountsApi {
         if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE) {
             Account account = accountService.getbyIban(IBAN);
             return new ResponseEntity<Account>(account, HttpStatus.OK);
-        } else {
-            throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to close account");
+        }
+        else if(userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_CUSTOMER){
+            Account account = accountService.getbyIban(IBAN);
+            if (userService.getLoggedInUser().getUserId() == account.getUser().getUserId()){
+                return new ResponseEntity<Account>(account, HttpStatus.OK);
+            }
+            else {
+                throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to see this account");
+            }
+        }
+        else {
+            throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You are not authorized to see this account");
         }
     }
     public ResponseEntity<Void> closeAccount(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN) {
