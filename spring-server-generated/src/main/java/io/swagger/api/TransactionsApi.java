@@ -74,7 +74,6 @@ public interface TransactionsApi {
             @ApiResponse(responseCode = "400", description = "period of time transactions could not find") })
     @RequestMapping(value = "/transactions/period",
             produces = { "application/json" },
-            consumes = { "application/json" },
             method = RequestMethod.GET)
     ResponseEntity<List<Transaction>> getCertainDateOfTransactions( @Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "Start date", required = true) String startDate, @Parameter(in = ParameterIn.QUERY, description = "" ,schema=@Schema()) @Valid @RequestParam(value = "End date", required = true) String endDate) throws Exception;
 

@@ -111,7 +111,7 @@ public class TransactionImpl implements TransactionService {
         List<Transaction> monthlyTransactions = new ArrayList<>();
         for (Transaction t: transactionList
              ) {
-            if (t.getTransactionDate().getMonth().equals(date1.getMonth())&&t.getTransactionDate().getMonth().equals(date2.getMonth())){
+            if (t.getTransactionDate().getMonth().equals(date1.getMonth()) || t.getTransactionDate().getMonth().equals(date2.getMonth())){
                 monthlyTransactions.add(t);
             }
         }
