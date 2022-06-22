@@ -128,13 +128,11 @@ public class TransactionsApiController implements TransactionsApi {
     @Override
     public ResponseEntity<List<Transaction>> getCertainDateOfTransactions( @Valid String startDate,  @Valid String endDate) throws Exception {
         if (userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_EMPLOYEE || userService.getLoggedInUser().getUserType() == UserTypeEnum.ROLE_CUSTOMER){
-            List<Transaction> transactionList = transactionService.getAllTransactionsBetween2Months(startDate,endDate, userService.getLoggedInUser());
+            List<Transaction> transactionList = transactionService.getAllTransactionsBetween2Months(startDate, endDate, userService.getLoggedInUser());
             return new ResponseEntity<List<Transaction>>(transactionList,HttpStatus.OK);
         }
         else {
-            throw new UnAuthorizedException(HttpStatus.FORBIDDEN,"Incorrect details");
+            throw new UnAuthorizedException(HttpStatus.FORBIDDEN, "You have no rights to access this url");
         }
     }
-
-
 }
