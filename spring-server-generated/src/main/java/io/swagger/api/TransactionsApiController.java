@@ -106,6 +106,7 @@ public class TransactionsApiController implements TransactionsApi {
                 if (userService.getLoggedInUser().getUserId() == accountChecker.getUser().getUserId()){
                     body.setTransactionDate(LocalDateTime.now());
                     body.setUserperforming(body.getAccountfrom().getUser().getUserType());
+                    body.setDayLimit();
                     transactionService.createTransaction(body);
                     TransactionResult transactionResult = new TransactionResult();
                     transactionResult.setMessage("You finaly made it!");
