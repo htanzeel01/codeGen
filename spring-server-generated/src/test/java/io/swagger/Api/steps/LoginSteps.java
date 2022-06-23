@@ -2,11 +2,14 @@ package io.swagger.Api.steps;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Given;
+import io.cucumber.junit.Cucumber;
 import io.swagger.model.DTO.RegistrationDTO;
 import io.swagger.model.User;
 import io.swagger.model.UserTypeEnum;
+import io.swagger.repository.UserRepository;
 import io.swagger.service.UserService;
 import org.json.JSONObject;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +30,8 @@ public class LoginSteps {
     private ResponseEntity<String> stringResponse;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
     private PasswordEncoder encoder;
     private ObjectMapper objectMapper;
     private User user;
@@ -51,7 +56,7 @@ public class LoginSteps {
         return responseEntity;
     }
     public void setUp() throws Exception {
-        this.user = createMockUserToCreate(UserTypeEnum.ROLE_CUSTOMER);
+        this.user = createMockUserToCreate(UserTypeEnum.ROLE_EMPLOYEE);
     }
 
     public void tearDown() {
@@ -61,7 +66,8 @@ public class LoginSteps {
     private User createMockUserToCreate(UserTypeEnum userType) throws Exception {
         ArrayList<UserTypeEnum> roles = new ArrayList<>();
         roles.add(userType);
-        RegistrationDTO registrationDTO = new RegistrationDTO("mah", "mah!", "user@gmail.nl", "mah", "has", UserTypeEnum.ROLE_EMPLOYEE);
+        RegistrationDTO registrationDTO = new RegistrationDTO("mri", "mri!", "mri@gmail.nl", "mad", "mri", UserTypeEnum.ROLE_EMPLOYEE);
+
         userService.createUser(registrationDTO);
         return user;
     }
@@ -84,8 +90,8 @@ public class LoginSteps {
 
         // Build body
         Map<String, String> map = new HashMap<String, String>();
-        map.put("username", "mah");
-        map.put("password", "mah!");
+        map.put("username", "mri");
+        map.put("Password", "mri!");
 
         ResponseEntity<String> responseEntity = postRequest(uri, headers, map);
         String response = responseEntity.getBody();

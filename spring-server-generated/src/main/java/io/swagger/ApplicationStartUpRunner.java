@@ -65,6 +65,10 @@ public class ApplicationStartUpRunner implements ApplicationRunner {
         firstAccount.setUser(firstUser);
         firstAccount.setIban("NL55INHO0171");
         secondAccount = new Account(new BigDecimal(1000), Account.AccountTypeEnum.CURRENT);
+        accounts.add(secondAccount);
+        secondAccount.setUser(secondUser);
+        accountService.save(secondAccount);
+        secondAccount = new Account(new BigDecimal(500), Account.AccountTypeEnum.SAVINGS);
         secondAccount.setUser(secondUser);
         accounts.add(firstAccount);
         accounts.add(secondAccount);

@@ -1,9 +1,5 @@
 Feature: UserToCreate tests
 
-  Scenario: Retrieve all users is status OK
-    When I retrieve all users
-    Then I get http status 200
-
-  Scenario: Getting one UserToCreate
-    When I retrieve userToCreate with id 1
-    Then The UserToCreate is "Mahedi"
+  Scenario: Get all users from the API performed by employee
+    When An employee makes a request to the /users API endpoint
+    Then The server will return list of 4 users

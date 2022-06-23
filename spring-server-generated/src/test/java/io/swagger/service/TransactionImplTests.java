@@ -51,8 +51,9 @@ public class TransactionImplTests {
     List<User> userList = new ArrayList<>();
     List<Account> accounts = new ArrayList<>();
 
-    private String firstIban = "NL55INHO0171";
-    private String secondIban = "NL55INHO3248";
+    private String firstIban = "NL55INHO01710294";
+    private String secondIban = "NL55INHO3248244";
+
     private Transaction transaction;
 
     @BeforeEach
@@ -75,8 +76,14 @@ public class TransactionImplTests {
         secondAccount.setIban(secondIban);
         accounts.add(firstAccount);
         accounts.add(secondAccount);
+
         transaction = new Transaction();
-        transaction.setAccountfrom(firstAccount);
+        accountRepository.save(firstAccount);
+        accountRepository.save(secondAccount);
+        transaction.setAccountfrom(accountService.getbyIban(firstAccount.getIban()));
+        transaction.setAccountto(secondAccount.getIban());
+        transaction.amount(new BigDecimal(10.00));
+        transaction.setId(3);
     }
     @AfterEach
     public void tearDown() {
@@ -84,15 +91,19 @@ public class TransactionImplTests {
         firstAccount = null;
         secondUser = null;
         secondAccount = null;
+        transaction = null;
     }
     @Test
     public void createTransaction() throws Exception {
-        accountRepository.save(firstAccount);
-        accountRepository.save(secondAccount);
         transactionRepository.save(transaction);
-        when(transactionRepository.getAllByAccountto(firstAccount.getIban())).thenReturn((Iterable<Transaction>) transaction);
-        Transaction transactions = transactionService.getTransactionsById(1);
-        assertEquals(transactions, this.transaction);
+        Transaction transaction = transactionRepository.findTransactionsById(3);
+        assertEquals(transaction.getId(), this.transaction.getId());
+    }
+    @Test
+    public void getTransactionById() throws Exception {
+        transactionRepository.save(transaction);
+        Transaction transaction = transactionRepository.findTransactionsById(3);
+        assertEquals(transaction, this.transaction);
     }
 
 }

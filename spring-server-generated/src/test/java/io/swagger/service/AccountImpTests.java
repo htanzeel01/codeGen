@@ -57,25 +57,25 @@ public class AccountImpTests {
 
     @Test
     public void addAccount() throws Exception {
-        accountService.save(testAccount);
+        accountRepository.save(testAccount);
         when(accountRepository.getAllByUserid(testUser.getUserId())).thenReturn(accountList);
-        List<Account> accountList1 = accountService.getAllUserByUserId(testUser.getUserId());
+        List<Account> accountList1 = accountRepository.getAllByUserid(testUser.getUserId());
         assertEquals(accountList1, accountList);
     }
 
     @Test
     public void getAccounts() throws Exception {
-        accountService.save(testAccount);
-        when(accountRepository.findAll()).thenReturn(accountList);
-        List<Account> accountList1 = accountService.getAllUserByUserId(testAccount.getUser().getUserId());
+        accountRepository.save(testAccount);
+        when(accountRepository.getAllByUserid(testUser.getUserId())).thenReturn(accountList);
+        List<Account> accountList1 = accountRepository.getAllByUserid(testUser.getUserId());
         assertEquals(accountList1, accountList);
     }
 
     @Test
     public void getAccountByIban(){
         accountRepository.save(testAccount);
-        when(accountRepository.findById(testAccount.getIban())).thenReturn(java.util.Optional.ofNullable(testAccount));
-        Account account = accountService.getbyIban(testAccount.getIban());
-        assertEquals(account, testAccount);
+        when(accountRepository.getAccountByIban(testAccount.getIban())).thenReturn(testAccount);
+        Account account1 =  accountRepository.getAccountByIban(testAccount.getIban());
+        assertEquals(account1, testAccount);
     }
 }
