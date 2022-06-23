@@ -100,9 +100,40 @@ public class UserSteps {
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
         stringResponse = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
     }
+
     @Then("The server will return list of {int} users")
     public void theServerWillReturnListOfUsers(int expectedNumberOfUsers) throws JSONException {
         JSONArray jsonArray = new JSONArray(stringResponse.getBody());
         Assert.assertEquals(expectedNumberOfUsers, jsonArray.length());
+    }
+    @When("An employee makes a request with userId {int} API endpoint")
+    public void someoneMakesARequestToTheUsersAPIEndpointWithoutAnAuthenticationToken(int userId) throws Exception {
+
+        URI uri = new URI("http://localhost:8089" + "/users/" + userId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", getJwtToken("mah","mah!"));
+
+        // Perform request
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        stringResponse = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+    }
+    @When("An employee makes a request with userId {int} API endpoint to get account")
+    public void someoneMakesARequestToTheUsersAPIEndpointWithAnAuthenticationToken(int userId) throws Exception {
+
+        URI uri = new URI("http://localhost:8089" + "/users/" + userId + "/accounts");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", getJwtToken("mah","mah!"));
+
+        // Perform request
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        stringResponse = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+    }
+    @Then("The server will return a {int} ok")
+    public void theServerWillReturnA200(int statusCode) {
+        Assert.assertEquals(statusCode, stringResponse.getStatusCodeValue());
     }
 }
