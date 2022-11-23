@@ -83,7 +83,6 @@ public class TransactionsApiController implements TransactionsApi {
         }
           catch (Exception e) {
               return new ResponseEntity<List<Transaction>>(HttpStatus.BAD_GATEWAY);
-
           }
     }
 

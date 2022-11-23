@@ -60,6 +60,13 @@ public class TransactionImpl implements TransactionService {
                 throw new Exception("Savings account can only transfer to one of your accounts");
             }
         }
+        else if (transaction.getAccountfrom().getAccountType() == Account.AccountTypeEnum.CURRENT) {
+            Account account2 = accountService.getbyIban(transaction.getAccountto());
+             {
+                 if (transaction.getAccountfrom().getAccountType() != account2.getAccountType())
+                throw new Exception("Savings account can only transfer to one of your accounts");
+            }
+        }
         if (CheckTransactionDayLimit(transaction)) {
             transactionRepository.save(transaction);
             accountService.updateAmount(transaction.getAccountfrom().getIban(), transaction.getAmount());
